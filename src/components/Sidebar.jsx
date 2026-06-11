@@ -211,8 +211,9 @@ export default function Sidebar({ setIsSearchOpen }) {
             <User size={16} color="var(--text-primary)" />
           </div>
           {!isCollapsed && (
-            <div style={{ display: 'flex', flexDirection: 'column', whiteSpace: 'nowrap' }}>
-              <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-primary)' }}>{currentUser?.name || "Guest"}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden' }}>{currentUser?.name || "Guest"}</span>
+              {currentUser?.role && <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: '600' }}>{currentUser.role}</span>}
             </div>
           )}
         </div>

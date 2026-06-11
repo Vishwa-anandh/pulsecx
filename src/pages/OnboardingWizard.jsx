@@ -71,12 +71,12 @@ export default function OnboardingWizard() {
         flex: 1, 
         margin: '1rem', 
         borderRadius: '1.5rem', 
-        background: 'linear-gradient(135deg, #0f172a 0%, #000000 100%)', 
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between',
         padding: '3rem',
-        color: '#ffffff',
+        color: '#0f172a',
         position: 'relative',
         overflow: 'hidden'
       }}>
@@ -88,18 +88,18 @@ export default function OnboardingWizard() {
           top: '50%',
           width: '90%',
           height: '75%',
-          backgroundColor: '#000000',
+          backgroundColor: '#ffffff',
           borderRadius: '1.5rem',
-          border: '10px solid #1e293b',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7), -10px 0 30px rgba(0, 0, 0, 0.5)',
+          border: '10px solid #cbd5e1',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1), -10px 0 30px rgba(0, 0, 0, 0.05)',
           transform: 'translateY(-50%) perspective(1200px) rotateY(-18deg) rotateX(12deg) rotateZ(-4deg)',
           overflow: 'hidden',
           zIndex: 1,
           transition: 'transform 0.5s ease'
         }}>
           {/* Tablet Screen inner shadow/glare effect */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.1)', zIndex: 2, pointerEvents: 'none' }}></div>
-          <div style={{ position: 'absolute', top: '-50%', left: '-50%', right: '-50%', bottom: '50%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 100%)', transform: 'rotate(30deg)', zIndex: 2, pointerEvents: 'none' }}></div>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.05)', zIndex: 2, pointerEvents: 'none' }}></div>
+          <div style={{ position: 'absolute', top: '-50%', left: '-50%', right: '-50%', bottom: '50%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, transparent 100%)', transform: 'rotate(30deg)', zIndex: 2, pointerEvents: 'none' }}></div>
           
           <img src="/banner.png" alt="pulseCX App Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top' }} />
         </div>
@@ -107,7 +107,7 @@ export default function OnboardingWizard() {
         {/* Top Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', zIndex: 2 }}>
           <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.1em', textTransform: 'uppercase' }}>pulseCX Platform</span>
-          <div style={{ height: '1px', width: '40px', backgroundColor: '#ffffff', opacity: 0.5 }}></div>
+          <div style={{ height: '1px', width: '40px', backgroundColor: '#0f172a', opacity: 0.5 }}></div>
         </div>
 
         {/* Bottom Text */}
@@ -118,20 +118,18 @@ export default function OnboardingWizard() {
             fontWeight: '600', 
             marginBottom: '1rem',
             maxWidth: '500px',
-            background: 'linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%)',
+            background: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            textShadow: '0 4px 12px rgba(0,0,0,0.2)'
+            backgroundClip: 'text'
           }}>
             Monitor.<br/>Analyze.<br/>Resolve.
           </h1>
           <p style={{ 
             fontSize: '0.9rem', 
             lineHeight: '1.6', 
-            opacity: 0.9, 
-            maxWidth: '350px',
-            textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+            opacity: 0.8, 
+            maxWidth: '350px'
           }}>
             Gain deep visibility into your customer journeys, APIs, and infrastructure. Detect anomalies before your users do.
           </p>
