@@ -20,8 +20,8 @@ export default function Step11Activate() {
       steps: setupData.journeySteps // we might not use this globally yet, but good to save
     });
 
-    // 2. Mark user as no longer "new" so the wizard closes
-    setCurrentUser({ ...currentUser, isNewUser: false });
+    // 2. Complete Onboarding and show mock data
+    setCurrentUser({ ...currentUser, isNewUser: false, isDemo: true });
   };
 
   return (
