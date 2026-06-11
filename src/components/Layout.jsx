@@ -4,7 +4,8 @@ import Sidebar from './Sidebar';
 import BottomNav from './BottomNav';
 import SearchModal from './SearchModal';
 import AIChatBot from './AIChatBot';
-import { OnboardingModal } from './OnboardingModal';
+import { AppSetupWizard } from './setup/AppSetupWizard';
+import { SetupProvider } from './setup/SetupContext';
 
 export default function Layout() {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
@@ -32,7 +33,9 @@ export default function Layout() {
       <a href="#main-content" className="skip-link" style={{ zIndex: 100 }}>Skip to main content</a>
       <Sidebar setIsSearchOpen={setIsSearchOpen} />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <OnboardingModal />
+      <SetupProvider>
+        <AppSetupWizard />
+      </SetupProvider>
       <main className="main-content" id="main-content" tabIndex="-1" style={{ outline: 'none', transition: 'margin-right 0.3s ease', marginRight: isChatOpen ? '400px' : '0' }}>
         <div className="scroll-wrapper">
           <div className="content-area animate-fade-in">

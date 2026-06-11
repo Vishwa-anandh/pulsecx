@@ -37,7 +37,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useUsers();
   if (!currentUser) {
-    return <Navigate to="/login" replace />;
+    return <LoginPage />;
   }
   return children;
 };

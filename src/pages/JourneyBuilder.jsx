@@ -16,8 +16,7 @@ export default function JourneyBuilder() {
   const [searchParams] = useSearchParams();
   const journeyId = searchParams.get('id');
   const { journeys, updateJourney } = useJourneys();
-
-  const currentJourney = journeys.find(j => j.id === journeyId) || { name: 'Checkout Flow Production', url: 'https://app.pulse.cx/login' };
+  const currentJourney = journeys.find(j => j.id === journeyId) || { name: 'Checkout Flow Production', url: 'https://app.pulse.cx' };
 
   // Canvas Pan & Zoom State
   const [zoom, setZoom] = useState(1);
@@ -229,7 +228,7 @@ export default function JourneyBuilder() {
   };
 
   const [steps, setSteps] = useState(currentJourney.steps || [
-    { id: 1, type: 'nav-open', label: 'Open URL', value: currentJourney.url || 'https://app.pulse.cx/login', icon: <Globe size={14} />, color: 'var(--accent-primary)' },
+    { id: 1, type: 'nav-open', label: 'Open URL', value: currentJourney.url || 'https://app.pulse.cx', icon: <Globe size={14} />, color: 'var(--accent-primary)' },
   ]);
 
   useEffect(() => {
