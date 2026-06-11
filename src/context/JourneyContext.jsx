@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useUsers } from './UserContext';
 
 const JourneyContext = createContext();
 
@@ -11,7 +12,16 @@ const initialJourneys = [
 ];
 
 export function JourneyProvider({ children }) {
-  const [journeys, setJourneys] = useState(initialJourneys);
+  const { currentUser } = useUsers();
+  const [journeys, setJourneys] = useState(currentUser?.isDemo ? initialJourneys : []);
+
+  useEffect(() => {
+    if (currentUser?.isDemo) {
+      setJourneys(initialJourneys);
+    } else {
+      setJourneys([]);
+    }
+  }, [currentUser]);
 
   const addJourney = (journey) => {
     const id = `J-${Math.floor(Math.random() * 900) + 100}`;

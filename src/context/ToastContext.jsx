@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
 const ToastContext = createContext(null);
@@ -28,10 +27,8 @@ export const ToastProvider = ({ children }) => {
       {children}
       {createPortal(
         <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'flex-end', pointerEvents: 'none' }}>
-          <TransitionGroup component={null}>
             {toasts.map(toast => (
-              <CSSTransition key={toast.id} timeout={300} classNames="row">
-                <div className="glass-panel" style={{ padding: '1rem', display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '320px', boxShadow: 'var(--shadow-xl)', pointerEvents: 'auto' }}>
+                <div key={toast.id} className="glass-panel animate-fade-in" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'flex-start', gap: '0.75rem', width: '320px', boxShadow: 'var(--shadow-xl)', pointerEvents: 'auto', animation: 'fadeIn 0.3s ease-out' }}>
                   {toast.type === 'success' ? <CheckCircle size={20} color="var(--accent-success)" /> :
                    toast.type === 'error' ? <AlertCircle size={20} color="var(--accent-danger)" /> :
                    <Info size={20} color="var(--accent-primary)" />}
@@ -40,9 +37,7 @@ export const ToastProvider = ({ children }) => {
                     <X size={16} />
                   </button>
                 </div>
-              </CSSTransition>
             ))}
-          </TransitionGroup>
         </div>,
         document.body
       )}

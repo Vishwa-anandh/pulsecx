@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUsers } from '../context/UserContext';
+import EmptyState from '../components/EmptyState';
 import { ShieldCheck, ShieldAlert, ShieldX, Clock, Globe, Search, Filter, Server, ChevronRight } from 'lucide-react';
 
 const MOCK_DOMAINS = [
@@ -11,15 +13,25 @@ const MOCK_DOMAINS = [
 ];
 
 export default function SslDnsHub() {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('SSL Certificates');
+  const navigate = useNavigate();
+  const { currentUser } = useUsers();
+
+  if (!currentUser?.isDemo) {
+    return (
+      <EmptyState 
+        title="SSL & DNS Monitoring" 
+        description="Monitor SSL certificates and DNS records to prevent expiration and configuration issues." 
+      />
+    );
+  }
 
   const renderSslTab = () => (
-    <div className="flex-col gap-6 animate-fade-in">
+    <div className="flex-col gap-4 animate-fade-in">
       {/* 7.1 SSL Dashboard KPIs */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ShieldCheck size={24} />
           </div>
           <div className="flex-col gap-1">
@@ -27,8 +39,8 @@ export default function SslDnsHub() {
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Healthy Certificates</span>
           </div>
         </div>
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(245, 158, 11, 0.1)', color: 'var(--accent-warning)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', color: 'var(--accent-warning)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ShieldAlert size={24} />
           </div>
           <div className="flex-col gap-1">
@@ -36,8 +48,8 @@ export default function SslDnsHub() {
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Expiring Soon (&lt; 30 days)</span>
           </div>
         </div>
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent-danger)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', color: 'var(--accent-danger)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ShieldX size={24} />
           </div>
           <div className="flex-col gap-1">
@@ -50,7 +62,7 @@ export default function SslDnsHub() {
       {/* 7.2 Certificate Inventory */}
       <div className="glass-panel" style={{ padding: '1rem 0' }}>
         <div style={{ padding: '0 1.5rem 1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: '1rem' }}>Certificate Inventory</h3>
+          <h3 style={{ margin: 0 }}>Certificate Inventory</h3>
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8125rem' }}>
           <thead>
@@ -85,11 +97,11 @@ export default function SslDnsHub() {
   );
 
   const renderDnsTab = () => (
-    <div className="flex-col gap-6 animate-fade-in">
+    <div className="flex-col gap-4 animate-fade-in">
       {/* 7.4 DNS Dashboard */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Clock size={24} />
           </div>
           <div className="flex-col gap-1">
@@ -97,8 +109,8 @@ export default function SslDnsHub() {
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Global Avg Resolution Time</span>
           </div>
         </div>
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Server size={24} />
           </div>
           <div className="flex-col gap-1">
@@ -110,7 +122,7 @@ export default function SslDnsHub() {
 
       <div className="glass-panel" style={{ padding: '1rem 0' }}>
         <div style={{ padding: '0 1.5rem 1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: '1rem' }}>Monitored Domains</h3>
+          <h3 style={{ margin: 0 }}>Monitored Domains</h3>
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8125rem' }}>
           <thead>
@@ -141,10 +153,10 @@ export default function SslDnsHub() {
   );
 
   return (
-    <div className="flex-col gap-6 animate-fade-in" style={{ paddingBottom: '2rem' }}>
+    <div className="flex-col gap-4 animate-fade-in" style={{ paddingBottom: '2rem' }}>
       <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Domain Security & Routing</h1>
+          <h1 style={{ marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Domain Security & Routing</h1>
           <p className="text-secondary" style={{ fontSize: '0.875rem' }}>Manage SSL certificates and DNS configurations across all active domains.</p>
         </div>
         <div className="flex gap-3">
@@ -156,7 +168,7 @@ export default function SslDnsHub() {
         </div>
       </div>
 
-      <div className="flex gap-6" style={{ borderBottom: '1px solid var(--border-color)' }}>
+      <div className="flex gap-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
         {['SSL Certificates', 'DNS Monitoring'].map(tab => (
           <button 
             key={tab}

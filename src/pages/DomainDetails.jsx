@@ -12,10 +12,10 @@ export default function DomainDetails() {
   const status = isExpired ? 'Expired' : isExpiring ? 'Expiring Soon' : 'Healthy';
 
   const renderCertificateDetails = () => (
-    <div className="grid grid-cols-2 gap-6 animate-fade-in">
-      <div className="flex-col gap-6">
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+    <div className="grid grid-cols-2 gap-4 animate-fade-in">
+      <div className="flex-col gap-4">
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
+          <h3 style={{ margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Key size={16} className="text-secondary" /> Primary Certificate
           </h3>
           <div className="flex-col gap-4">
@@ -44,15 +44,15 @@ export default function DomainDetails() {
           </div>
         </div>
       </div>
-      <div className="flex-col gap-6">
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h3 style={{ margin: '0', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="flex-col gap-4">
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column', gap: 'var(--panel-gap)' }}>
+          <h3 style={{ margin: '0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Link size={16} className="text-secondary" /> Chain of Trust
           </h3>
-          <div className="flex-col" style={{ paddingLeft: '0.5rem', borderLeft: '2px dashed var(--border-color)', marginLeft: '1rem', marginTop: '0.5rem', gap: '1.5rem' }}>
+          <div className="flex-col" style={{ paddingLeft: '0.5rem', borderLeft: '2px dashed var(--border-color)', marginLeft: '1rem', marginTop: '0.5rem', gap: 'var(--panel-gap)' }}>
             <div className="flex items-center gap-3" style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', left: '-13px', width: '10px', height: '2px', background: 'var(--border-color)' }}></div>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-success)' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-success)' }}>
                 <ShieldCheck size={16} />
               </div>
               <div className="flex-col">
@@ -62,7 +62,7 @@ export default function DomainDetails() {
             </div>
             <div className="flex items-center gap-3" style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', left: '-13px', width: '10px', height: '2px', background: 'var(--border-color)' }}></div>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-success)' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-success)' }}>
                 <ShieldCheck size={16} />
               </div>
               <div className="flex-col">
@@ -72,7 +72,7 @@ export default function DomainDetails() {
             </div>
             <div className="flex items-center gap-3" style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', left: '-13px', width: '10px', height: '2px', background: isExpired ? 'var(--accent-danger)' : isExpiring ? 'var(--accent-warning)' : 'var(--accent-success)' }}></div>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: isExpired ? 'rgba(239, 68, 68, 0.1)' : isExpiring ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isExpired ? 'var(--accent-danger)' : isExpiring ? 'var(--accent-warning)' : 'var(--accent-primary)' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isExpired ? 'var(--accent-danger)' : isExpiring ? 'var(--accent-warning)' : 'var(--accent-primary)' }}>
                 {isExpired ? <ShieldAlert size={16} /> : <Globe size={16} />}
               </div>
               <div className="flex-col">
@@ -121,16 +121,16 @@ export default function DomainDetails() {
   );
 
   return (
-    <div className="flex-col gap-6 animate-fade-in" style={{ paddingBottom: '2rem' }}>
+    <div className="flex-col gap-4 animate-fade-in" style={{ paddingBottom: '2rem' }}>
       
       {/* Hero Banner */}
       <div className="glass-panel" style={{ 
         background: status === 'Expired' ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, var(--bg-surface) 100%)' : status === 'Expiring Soon' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, var(--bg-surface) 100%)' : 'var(--bg-surface)', 
         border: '1px solid var(--border-color)',
-        padding: '2rem',
+        padding: 'var(--panel-padding)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem'
+        gap: 'var(--panel-gap)'
       }}>
         <div className="flex gap-4" style={{ alignItems: 'flex-start' }}>
           <button className="btn-icon" onClick={() => navigate('/ssl-dns')} style={{ marginTop: '0.25rem', background: 'var(--bg-base)' }}>
@@ -141,7 +141,7 @@ export default function DomainDetails() {
               <span style={{ fontSize: '0.8125rem', fontWeight: '600', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>Domain Details</span>
               <span className={`badge badge-${status === 'Expired' ? 'danger' : status === 'Expiring Soon' ? 'warning' : 'success'}`}>{status}</span>
             </div>
-            <h1 style={{ fontSize: '2rem', margin: 0, fontWeight: '700', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h1 style={{ margin: 0, fontWeight: '700', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               {domain}
             </h1>
             <p className="flex items-center gap-2" style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0 }}>
@@ -149,12 +149,12 @@ export default function DomainDetails() {
             </p>
           </div>
           <div className="flex gap-2">
-            <button className="btn btn-ghost" style={{ background: 'var(--bg-base)' }}><ExternalLink size={14}/> View Live</button>
+            <button className="btn btn-ghost" style={{ background: 'var(--bg-base)' }} onClick={() => window.open(`https://${domain}`, '_blank')}><ExternalLink size={14}/> View Live</button>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-6" style={{ borderBottom: '1px solid var(--border-color)' }}>
+      <div className="flex gap-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
         {['Certificate Details', 'DNS Records'].map(tab => (
           <button 
             key={tab}

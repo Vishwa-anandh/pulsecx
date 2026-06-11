@@ -2,13 +2,25 @@ import React, { useState } from 'react';
 import { ShieldAlert, Search, Filter, AlertTriangle, AlertCircle, Info, ChevronRight, CheckCircle2, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useIncidents } from '../context/IncidentContext';
+import { useUsers } from '../context/UserContext';
 import { createPortal } from 'react-dom';
+import EmptyState from '../components/EmptyState';
 
 export default function IncidentCenter() {
   const navigate = useNavigate();
   const { incidents, addIncident } = useIncidents();
+  const { currentUser } = useUsers();
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
+
+  if (!currentUser?.isDemo) {
+    return (
+      <EmptyState 
+        title="Incident Center" 
+        description="No incidents found. Connect your services to start tracking system anomalies." 
+      />
+    );
+  }
   
   const [showReportModal, setShowReportModal] = useState(false);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
@@ -19,8 +31,12 @@ export default function IncidentCenter() {
 
   // Report Modal state
   const [newIncidentTitle, setNewIncidentTitle] = useState('');
+  const [newIncidentDesc, setNewIncidentDesc] = useState('');
   const [newIncidentSeverity, setNewIncidentSeverity] = useState('Minor');
   const [newIncidentService, setNewIncidentService] = useState('Payment Gateway');
+  const [newIncidentJourney, setNewIncidentJourney] = useState('Checkout Payment Flow');
+  const [newIncidentTeam, setNewIncidentTeam] = useState('Platform Ops');
+  const [newIncidentOwner, setNewIncidentOwner] = useState('');
 
   const filteredIncidents = incidents.filter(inc => {
     const matchesFilter = filter === 'All' || inc.severity === filter;
@@ -45,21 +61,28 @@ export default function IncidentCenter() {
       case 'Investigating': return <span className="badge badge-danger pulse-dot">Investigating</span>;
       case 'Acknowledged': return <span className="badge badge-warning">Acknowledged</span>;
       case 'Identified': return <span className="badge badge-warning">Identified</span>;
-      case 'Resolved': return <span className="badge" style={{ background: 'var(--bg-surface-hover)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}><CheckCircle2 size={10} style={{ marginRight: '4px' }}/>Resolved</span>;
+      case 'Resolved': return <span className="badge" style={{ border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}><CheckCircle2 size={10} style={{ marginRight: '4px' }}/>Resolved</span>;
       default: return <span className="badge">{status}</span>;
     }
   };
 
   const handleReportSubmit = (e) => {
     e.preventDefault();
-    if (newIncidentTitle) {
+    if (newIncidentTitle && newIncidentDesc && newIncidentOwner) {
       addIncident({
         title: newIncidentTitle,
+        description: newIncidentDesc,
         severity: newIncidentSeverity,
-        service: newIncidentService
+        service: newIncidentService,
+        journey: newIncidentJourney,
+        team: newIncidentTeam,
+        owner: newIncidentOwner
       });
       setShowReportModal(false);
+      // Reset state
       setNewIncidentTitle('');
+      setNewIncidentDesc('');
+      setNewIncidentOwner('');
     }
   };
 
@@ -70,7 +93,7 @@ export default function IncidentCenter() {
     <div className="flex-col gap-4 animate-fade-in" style={{ paddingBottom: '2rem' }}>
       <div className="flex justify-between items-center" style={{ marginBottom: '0.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.125rem' }}>Incident Center</h1>
+          <h1 style={{ marginBottom: '0.125rem' }}>Incident Center</h1>
           <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Track, investigate, and resolve system anomalies.</p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowReportModal(true)}>
@@ -79,7 +102,7 @@ export default function IncidentCenter() {
       </div>
 
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2" style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', padding: '0.4rem 0.75rem', width: '18.75rem' }}>
@@ -116,7 +139,7 @@ export default function IncidentCenter() {
         </div>
 
         {showAdvancedFilters && (
-          <div style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-base)', display: 'flex', gap: '2rem' }} className="animate-fade-in">
+          <div style={{ padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-base)', display: 'flex', gap: 'var(--panel-gap)' }} className="animate-fade-in">
             <div className="flex-col gap-2">
               <label style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-muted)'}}>Filter by Service</label>
               <select 
@@ -143,7 +166,7 @@ export default function IncidentCenter() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8125rem' }}>
             <thead>
-              <tr style={{ background: 'var(--bg-surface-hover)', borderBottom: '1px solid var(--border-color)' }}>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                 <th style={{ padding: '0.75rem 1rem', fontWeight: '600', color: 'var(--text-secondary)' }}>Incident ID</th>
                 <th style={{ padding: '0.75rem 1rem', fontWeight: '600', color: 'var(--text-secondary)' }}>Title & Service</th>
                 <th style={{ padding: '0.75rem 1rem', fontWeight: '600', color: 'var(--text-secondary)' }}>Severity</th>
@@ -174,7 +197,7 @@ export default function IncidentCenter() {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={6} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>No incidents match your current filters.</td>
+                  <td colSpan={6} style={{ padding: 'var(--panel-padding)', textAlign: 'center', color: 'var(--text-muted)' }}>No incidents match your current filters.</td>
                 </tr>
               )}
             </tbody>
@@ -184,17 +207,22 @@ export default function IncidentCenter() {
 
       {/* Report Incident Modal */}
       {showReportModal && createPortal(
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-panel animate-fade-in" style={{ width: '400px', background: 'var(--bg-surface)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="glass-panel animate-fade-in" style={{ width: '500px', background: 'var(--bg-surface)', padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column', gap: 'var(--panel-gap)', maxHeight: '90vh', overflowY: 'auto' }}>
             <div className="flex justify-between items-center">
-              <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Report New Incident</h2>
+              <h2 style={{ margin: 0 }}>Report New Incident</h2>
               <button className="btn-icon" onClick={() => setShowReportModal(false)}><X size={16}/></button>
             </div>
             
-            <form onSubmit={handleReportSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleReportSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--panel-gap)' }}>
               <div className="flex-col gap-2">
                 <label style={{ fontSize: '0.8125rem', fontWeight: '600' }}>Incident Title</label>
                 <input required type="text" value={newIncidentTitle} onChange={(e) => setNewIncidentTitle(e.target.value)} placeholder="e.g. Cache nodes offline" style={{ width: '100%', padding: '0.5rem 0.75rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', outline: 'none' }} />
+              </div>
+
+              <div className="flex-col gap-2">
+                <label style={{ fontSize: '0.8125rem', fontWeight: '600' }}>Description & Impact Summary</label>
+                <textarea required rows={3} value={newIncidentDesc} onChange={(e) => setNewIncidentDesc(e.target.value)} placeholder="Provide initial observations..." style={{ width: '100%', padding: '0.5rem 0.75rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', outline: 'none', resize: 'vertical' }} />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -217,6 +245,36 @@ export default function IncidentCenter() {
                     <option>ElasticSearch Cluster</option>
                   </select>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex-col gap-2">
+                  <label style={{ fontSize: '0.8125rem', fontWeight: '600' }}>Affected Journey</label>
+                  <select value={newIncidentJourney} onChange={(e) => setNewIncidentJourney(e.target.value)} style={{ width: '100%', padding: '0.5rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', outline: 'none' }}>
+                    <option>Checkout Payment Flow</option>
+                    <option>Global Routing</option>
+                    <option>Profile Update</option>
+                    <option>Login Flow</option>
+                    <option>Product Search</option>
+                    <option>Multiple</option>
+                  </select>
+                </div>
+
+                <div className="flex-col gap-2">
+                  <label style={{ fontSize: '0.8125rem', fontWeight: '600' }}>Assigned Team</label>
+                  <select value={newIncidentTeam} onChange={(e) => setNewIncidentTeam(e.target.value)} style={{ width: '100%', padding: '0.5rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', outline: 'none' }}>
+                    <option>Platform Ops</option>
+                    <option>Payments Engineering</option>
+                    <option>Data Eng</option>
+                    <option>Security</option>
+                    <option>Search Eng</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex-col gap-2">
+                <label style={{ fontSize: '0.8125rem', fontWeight: '600' }}>Incident Owner</label>
+                <input required type="text" value={newIncidentOwner} onChange={(e) => setNewIncidentOwner(e.target.value)} placeholder="e.g. Jane Doe" style={{ width: '100%', padding: '0.5rem 0.75rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', outline: 'none' }} />
               </div>
               
               <div className="flex justify-end gap-2" style={{ marginTop: '1rem' }}>

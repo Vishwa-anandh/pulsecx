@@ -69,7 +69,7 @@ export default function SearchModal({ isOpen, onClose }) {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '10vh', background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }} onClick={onClose}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '10vh', backdropFilter: 'blur(4px)' }} onClick={onClose}>
       <div 
         onClick={(e) => e.stopPropagation()} 
         className="animate-fade-in"
@@ -83,7 +83,7 @@ export default function SearchModal({ isOpen, onClose }) {
           overflow: 'hidden'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', borderBottom: '1px solid var(--border-color)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)' }}>
           <Search size={20} color="var(--text-muted)" style={{ marginRight: '1rem' }} />
           <input 
             ref={inputRef}
@@ -97,9 +97,9 @@ export default function SearchModal({ isOpen, onClose }) {
             <X size={20} color="var(--text-muted)" />
           </button>
         </div>
-        <div style={{ padding: '1rem', maxHeight: '60vh', overflowY: 'auto' }}>
+        <div style={{ padding: 'var(--panel-padding)', maxHeight: '60vh', overflowY: 'auto' }}>
           {filteredItems.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+            <div style={{ textAlign: 'center', padding: 'var(--panel-padding)', color: 'var(--text-muted)' }}>
               No results found for "{searchQuery}"
             </div>
           ) : (

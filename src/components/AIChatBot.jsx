@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Sparkles, Mic, MicOff, LayoutDashboard, MonitorPlay } from 'lucide-react';
+import { Bot, X, Send, Sparkles, Mic, MicOff, LayoutDashboard, MonitorPlay, RotateCcw } from 'lucide-react';
 import mockData from '../data/mockDatabase.json';
 
 const MiniExecutiveDashboard = () => (
-  <div style={{ background: 'var(--bg-surface-hover)', padding: '0.75rem', borderRadius: '0.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+  <div style={{ padding: '0.75rem', borderRadius: '0.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
     <div style={{ fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--text-secondary)' }}><LayoutDashboard size={14} /> Executive Summary</div>
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
       <div style={{ background: 'var(--bg-surface)', padding: '0.5rem', borderRadius: '0.25rem', border: '1px solid var(--border-color)' }}>
@@ -19,7 +19,7 @@ const MiniExecutiveDashboard = () => (
 );
 
 const MiniMonitoringDashboard = () => (
-  <div style={{ background: 'var(--bg-surface-hover)', padding: '0.75rem', borderRadius: '0.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+  <div style={{ padding: '0.75rem', borderRadius: '0.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
     <div style={{ fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--text-secondary)' }}><MonitorPlay size={14} /> Monitoring Status</div>
     <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.5rem' }}>
       {mockData.monitoring.syntheticMonitors.slice(0,2).map((mon, i) => (
@@ -113,34 +113,36 @@ export default function AIChatBot({ isOpen, setIsOpen }) {
     setIsLoading(true);
     
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg })
-      });
+      const getSimulatedResponse = (msg) => {
+        const lowerMsg = msg.toLowerCase();
+        if (lowerMsg.includes('executive')) return 'Here is the executive summary you requested:\n[RENDER_EXECUTIVE_DASHBOARD]';
+        if (lowerMsg.includes('monitoring')) return 'Here is the current status of our synthetic monitors:\n[RENDER_MONITORING_DASHBOARD]';
+        if (lowerMsg.includes('score')) return 'The current Customer Experience (CX) score is 84, which is up 2 points from last week.';
+        return 'I am a simulated AI assistant for this prototype. I understand intents regarding the executive dashboard, monitoring, and CX scores! Try asking me about those.';
+      };
       
-      if (!response.ok) {
-        setMessages(prev => [...prev, { id: Date.now(), sender: 'bot', text: 'Error connecting to local AI.' }]);
+      const simulatedText = getSimulatedResponse(userMsg);
+      const botMsgId = Date.now() + Math.random();
+      
+      // Artificial delay before starting to type
+      setTimeout(() => {
+        setMessages(prev => [...prev, { id: botMsgId, sender: 'bot', text: '' }]);
         setIsLoading(false);
-        return;
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      const botMsgId = Date.now();
-      
-      setMessages(prev => [...prev, { id: botMsgId, sender: 'bot', text: '' }]);
-      setIsLoading(false); // Stop loading spinner once streaming starts
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
         
-        const chunk = decoder.decode(value, { stream: true });
-        setMessages(prev => prev.map(msg => 
-          msg.id === botMsgId ? { ...msg, text: msg.text + chunk } : msg
-        ));
-      }
+        let i = 0;
+        const interval = setInterval(() => {
+          if (i < simulatedText.length) {
+            const chunk = simulatedText.slice(i, i + 4);
+            setMessages(prev => prev.map(msg => 
+              msg.id === botMsgId ? { ...msg, text: msg.text + chunk } : msg
+            ));
+            i += 4;
+          } else {
+            clearInterval(interval);
+          }
+        }, 20);
+      }, 600);
+      
     } catch (err) {
       setMessages(prev => [...prev, { id: Date.now(), sender: 'bot', text: 'Failed to connect to local AI.' }]);
       setIsLoading(false);
@@ -167,7 +169,7 @@ export default function AIChatBot({ isOpen, setIsOpen }) {
           zIndex: 9998
         }}>
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-surface-hover)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)'}}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary-glow)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Bot size={18} />
@@ -179,13 +181,18 @@ export default function AIChatBot({ isOpen, setIsOpen }) {
                 </div>
               </div>
             </div>
-            <button className="btn-ghost tooltip-container" onClick={() => setIsOpen(false)} style={{ padding: '0.25rem', borderRadius: '50%', border: 'none', cursor: 'pointer' }} data-tooltip="Close">
-              <X size={18} color="var(--text-muted)" />
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button className="btn-ghost tooltip-container" onClick={() => setMessages([{ id: 1, sender: 'bot', text: 'Hi Mark! I am powered by Antigravity CLI. How can I help you analyze the dashboard today?' }])} style={{ padding: '0.25rem', borderRadius: '50%', border: 'none', cursor: 'pointer' }} data-tooltip="Refresh Chat">
+                <RotateCcw size={16} color="var(--text-muted)" />
+              </button>
+              <button className="btn-ghost tooltip-container" onClick={() => setIsOpen(false)} style={{ padding: '0.25rem', borderRadius: '50%', border: 'none', cursor: 'pointer' }} data-tooltip="Close">
+                <X size={18} color="var(--text-muted)" />
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
-          <div style={{ flex: 1, padding: '1rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', background: 'var(--bg-base)' }}>
+          <div style={{ flex: 1, padding: 'var(--panel-padding)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--panel-gap)', background: 'var(--bg-base)' }}>
             {messages.map((msg) => (
               <div key={msg.id} style={{ 
                 alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
@@ -220,7 +227,7 @@ export default function AIChatBot({ isOpen, setIsOpen }) {
             {messages.length === 1 && !isLoading && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.5rem' }}>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '0.25rem', fontWeight: '500' }}>Quick Actions</span>
-                <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingBottom: '0.5rem' }}>
                   {quickActions.map((action, idx) => (
                     <button
                       key={idx}
@@ -228,12 +235,12 @@ export default function AIChatBot({ isOpen, setIsOpen }) {
                       style={{
                         background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1))',
                         border: '1px solid rgba(99, 102, 241, 0.2)',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '2rem',
+                        padding: '0.75rem 1rem',
+                        borderRadius: '0.75rem',
                         fontSize: '0.75rem',
                         color: 'var(--accent-primary)',
                         cursor: 'pointer',
-                        whiteSpace: 'nowrap',
+                        textAlign: 'left',
                         transition: 'all 0.2s ease',
                         fontWeight: '500'
                       }}
@@ -257,7 +264,7 @@ export default function AIChatBot({ isOpen, setIsOpen }) {
           </div>
 
           {/* Input Area */}
-          <form onSubmit={handleSend} style={{ padding: '1rem', borderTop: '1px solid var(--border-color)', background: 'var(--bg-surface)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <form onSubmit={handleSend} style={{ padding: 'var(--panel-padding)', borderTop: '1px solid var(--border-color)', background: 'var(--bg-surface)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
             <button 
               type="button" 
               onClick={toggleListening}

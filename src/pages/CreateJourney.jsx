@@ -76,7 +76,7 @@ export default function CreateJourney() {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 style={{ fontSize: '1.5rem', marginBottom: '0.125rem' }}>Create New Journey</h1>
+            <h1 style={{ marginBottom: '0.125rem' }}>Create New Journey</h1>
             <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Configure a new synthetic testing workflow.</p>
           </div>
         </div>
@@ -87,17 +87,17 @@ export default function CreateJourney() {
       </div>
 
       {/* Scrolling Content */}
-      <div style={{ maxWidth: '50rem', width: '100%', margin: '0 auto', paddingBottom: '4rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div style={{ maxWidth: '50rem', width: '100%', margin: '0 auto', paddingBottom: '4rem', display: 'flex', flexDirection: 'column', gap: 'var(--panel-gap)' }}>
         
         {/* Section 1: Basic Info */}
-        <div className="glass-panel" id="basic-info" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
+        <div className="glass-panel" id="basic-info" style={{ padding: 'var(--panel-padding)', display: 'flex', gap: 'var(--panel-gap)' }}>
           <div style={{ width: '12.5rem', flexShrink: 0 }}>
             <div className="flex items-center gap-2" style={{ fontWeight: '600', marginBottom: '0.5rem' }}>
               <Settings size={16} className="text-primary" /> Basic Info
             </div>
             <p className="text-secondary" style={{ fontSize: '0.75rem' }}>Core details for identifying this workflow.</p>
           </div>
-          <div className="flex-col gap-6" style={{ flex: 1, maxWidth: '50rem' }}>
+          <div className="flex-col gap-4" style={{ flex: 1, maxWidth: '50rem' }}>
             <div className="flex-col gap-1">
               <label style={{ fontSize: '0.8125rem', fontWeight: '600', color: 'var(--text-secondary)' }}>Journey Name</label>
               <input type="text" placeholder="e.g. Checkout Flow Production" value={name} onChange={e => { setName(e.target.value); if(errors.name) setErrors({...errors, name: null}); }} style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-base)', border: errors.name ? '1px solid var(--accent-danger)' : '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: 'var(--text-primary)', outline: 'none' }} />
@@ -112,7 +112,7 @@ export default function CreateJourney() {
         </div>
 
         {/* Section 2: Locations */}
-        <div className="glass-panel" id="locations" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
+        <div className="glass-panel" id="locations" style={{ padding: 'var(--panel-padding)', display: 'flex', gap: 'var(--panel-gap)' }}>
           <div style={{ width: '12.5rem', flexShrink: 0 }}>
             <div className="flex items-center gap-2" style={{ fontWeight: '600', marginBottom: '0.5rem' }}>
               <Globe size={16} className="text-primary" /> Locations
@@ -123,7 +123,7 @@ export default function CreateJourney() {
             {['US East (N. Virginia)', 'US West (Oregon)', 'EU (Frankfurt)', 'AP (Tokyo)', 'AP (Sydney)', 'SA (São Paulo)'].map((loc) => {
               const isSelected = locations.includes(loc);
               return (
-                <div key={loc} onClick={() => toggleLocation(loc)} className="flex items-center gap-3" style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', background: isSelected ? 'var(--accent-primary-glow)' : 'var(--bg-base)', borderColor: isSelected ? 'var(--accent-primary)' : 'var(--border-color)' }}>
+                <div key={loc} onClick={() => toggleLocation(loc)} className="flex items-center gap-3" style={{ padding: 'var(--panel-padding)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', background: isSelected ? 'var(--accent-primary-glow)' : 'var(--bg-base)', borderColor: isSelected ? 'var(--accent-primary)' : 'var(--border-color)' }}>
                   <input type="checkbox" checked={isSelected} readOnly style={{ accentColor: 'var(--accent-primary)', width: '16px', height: '16px', cursor: 'pointer' }} />
                   <span style={{ fontSize: '0.8125rem', fontWeight: '500' }}>{loc}</span>
                 </div>
@@ -133,7 +133,7 @@ export default function CreateJourney() {
         </div>
 
         {/* Section 3: Frequency */}
-        <div className="glass-panel" id="frequency" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
+        <div className="glass-panel" id="frequency" style={{ padding: 'var(--panel-padding)', display: 'flex', gap: 'var(--panel-gap)' }}>
           <div style={{ width: '12.5rem', flexShrink: 0 }}>
             <div className="flex items-center gap-2" style={{ fontWeight: '600', marginBottom: '0.5rem' }}>
               <Clock size={16} className="text-primary" /> Frequency
@@ -143,13 +143,13 @@ export default function CreateJourney() {
           <div className="flex-col gap-3" style={{ flex: 1 }}>
             <div className="grid grid-cols-3 gap-3">
               {['1 Minute', '5 Minutes', '15 Minutes', '30 Minutes', '1 Hour', 'Custom'].map((freq) => (
-                <div key={freq} onClick={() => setFrequency(freq)} style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', textAlign: 'center', background: frequency === freq ? 'var(--accent-primary-glow)' : 'var(--bg-base)', borderColor: frequency === freq ? 'var(--accent-primary)' : 'var(--border-color)' }}>
+                <div key={freq} onClick={() => setFrequency(freq)} style={{ padding: 'var(--panel-padding)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', textAlign: 'center', background: frequency === freq ? 'var(--accent-primary-glow)' : 'var(--bg-base)', borderColor: frequency === freq ? 'var(--accent-primary)' : 'var(--border-color)' }}>
                   <span style={{ fontSize: '0.8125rem', fontWeight: '600' }}>{freq}</span>
                 </div>
               ))}
             </div>
             {frequency === 'Custom' && (
-              <div className="animate-fade-in" style={{ marginTop: '0.5rem', display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+              <div className="animate-fade-in" style={{ marginTop: '0.5rem', display: 'flex', gap: 'var(--panel-gap)', alignItems: 'flex-start' }}>
                 <div className="flex-col gap-1" style={{ flex: 1 }}>
                   <label style={{ fontSize: '0.8125rem', fontWeight: '600', color: 'var(--text-secondary)' }}>Every</label>
                   <input 
@@ -184,7 +184,7 @@ export default function CreateJourney() {
         </div>
 
         {/* Section 4: Alerts */}
-        <div className="glass-panel" id="alerts" style={{ padding: '2rem', display: 'flex', gap: '2rem' }}>
+        <div className="glass-panel" id="alerts" style={{ padding: 'var(--panel-padding)', display: 'flex', gap: 'var(--panel-gap)' }}>
           <div style={{ width: '12.5rem', flexShrink: 0 }}>
             <div className="flex items-center gap-2" style={{ fontWeight: '600', marginBottom: '0.5rem' }}>
               <Bell size={16} className="text-primary" /> Notifications
@@ -192,7 +192,7 @@ export default function CreateJourney() {
             <p className="text-secondary" style={{ fontSize: '0.75rem' }}>Who to notify when this journey fails.</p>
           </div>
           <div className="flex-col gap-3" style={{ flex: 1 }}>
-            <div className="flex items-center justify-between" style={{ padding: '1rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)' }}>
+            <div className="flex items-center justify-between" style={{ padding: 'var(--panel-padding)', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)' }}>
               <div className="flex-col gap-1">
                 <span style={{ fontWeight: '600', fontSize: '0.8125rem' }}>Slack Integration</span>
                 <span className="text-secondary" style={{ fontSize: '0.75rem' }}>Send failure screenshots to #alerts channel</span>
@@ -201,7 +201,7 @@ export default function CreateJourney() {
                 <div style={{ width: '18px', height: '18px', background: alerts.slack ? 'white' : 'var(--text-muted)', borderRadius: '50%', position: 'absolute', top: '2px', left: alerts.slack ? 'auto' : '2px', right: alerts.slack ? '2px' : 'auto', transition: 'all 0.2s' }} />
               </div>
             </div>
-            <div className="flex items-center justify-between" style={{ padding: '1rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)' }}>
+            <div className="flex items-center justify-between" style={{ padding: 'var(--panel-padding)', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)' }}>
               <div className="flex-col gap-1">
                 <span style={{ fontWeight: '600', fontSize: '0.8125rem' }}>Email Alerts</span>
                 <span className="text-secondary" style={{ fontSize: '0.75rem' }}>Send daily summary reports</span>
@@ -216,22 +216,22 @@ export default function CreateJourney() {
       </div>
 
       {showTemplateModal && createPortal(
-        <div className="animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: 'var(--bg-surface)', padding: '2rem', borderRadius: 'var(--radius-lg)', width: '31.25rem', boxShadow: 'var(--shadow-lg)' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>Select a Template</h2>
+        <div className="animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: 'var(--bg-surface)', padding: 'var(--panel-padding)', borderRadius: 'var(--radius-lg)', width: '31.25rem', boxShadow: 'var(--shadow-lg)' }}>
+            <h2 style={{ fontWeight: '600', marginBottom: '1rem' }}>Select a Template</h2>
             <p className="text-secondary" style={{ fontSize: '0.875rem', marginBottom: '1.5rem' }}>Choose a pre-configured journey template to start with.</p>
             
             <div className="flex-col gap-3">
-              <div onClick={() => applyTemplate('checkout')} className="hover:bg-[var(--bg-surface-hover)] group" style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'all 0.2s' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '0.25rem' }}>E-commerce Checkout Flow</h3>
+              <div onClick={() => applyTemplate('checkout')} className="hover:bg-[var(--bg-surface-hover)] group" style={{ padding: 'var(--panel-padding)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'all 0.2s' }}>
+                <h3 style={{ fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '0.25rem' }}>E-commerce Checkout Flow</h3>
                 <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Multi-region test running every 1 minute with strict alerting.</p>
               </div>
-              <div onClick={() => applyTemplate('sso')} className="hover:bg-[var(--bg-surface-hover)] group" style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'all 0.2s' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '0.25rem' }}>Enterprise SAML SSO Login</h3>
+              <div onClick={() => applyTemplate('sso')} className="hover:bg-[var(--bg-surface-hover)] group" style={{ padding: 'var(--panel-padding)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'all 0.2s' }}>
+                <h3 style={{ fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '0.25rem' }}>Enterprise SAML SSO Login</h3>
                 <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Global coverage test running every 5 minutes.</p>
               </div>
-              <div onClick={() => applyTemplate('reset')} className="hover:bg-[var(--bg-surface-hover)] group" style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'all 0.2s' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '0.25rem' }}>Password Reset Flow</h3>
+              <div onClick={() => applyTemplate('reset')} className="hover:bg-[var(--bg-surface-hover)] group" style={{ padding: 'var(--panel-padding)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'all 0.2s' }}>
+                <h3 style={{ fontWeight: '600', color: 'var(--accent-primary)', marginBottom: '0.25rem' }}>Password Reset Flow</h3>
                 <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>US-only lightweight test running every 15 minutes.</p>
               </div>
             </div>

@@ -99,4 +99,9 @@ If the user asks you to show or render the Monitoring Dashboard, output EXACTLY 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), antigravityApiPlugin()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 })

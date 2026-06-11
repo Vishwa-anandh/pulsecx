@@ -97,7 +97,7 @@ export default function JourneyCatalog() {
     <div className="flex-col gap-4 animate-fade-in" style={{ paddingBottom: '2rem' }}>
       <div className="flex justify-between items-center" style={{ marginBottom: '0.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.125rem' }}>Customer Journeys</h1>
+          <h1 style={{ marginBottom: '0.125rem' }}>Customer Journeys</h1>
           <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Manage and monitor synthetic customer workflows.</p>
         </div>
         <button className="btn btn-primary" onClick={() => navigate('/journeys/create')}>
@@ -106,7 +106,7 @@ export default function JourneyCatalog() {
       </div>
 
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2" style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', padding: '0.4rem 0.75rem', width: '18.75rem' }}>
@@ -143,7 +143,7 @@ export default function JourneyCatalog() {
         </div>
 
         {filteredJourneys.length === 0 ? (
-          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1rem', flex: 1, display: 'flex' }}>
+          <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: 'var(--panel-padding)', flex: 1, display: 'flex' }}>
             <EmptyState 
               title="No journeys found" 
               description={`We couldn't find any journeys matching "${search}". Try a different search term or create a new journey.`}
@@ -156,7 +156,7 @@ export default function JourneyCatalog() {
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8125rem' }} role="table">
             <caption className="sr-only">Customer Journeys Catalog</caption>
             <thead>
-              <tr style={{ background: 'var(--bg-surface-hover)', borderBottom: '1px solid var(--border-color)' }}>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                 <th style={{ padding: '0.75rem 1rem', width: '40px' }}>
                   <input type="checkbox" checked={filteredJourneys.length > 0 && selectedJourneys.length === filteredJourneys.length} onChange={handleSelectAll} style={{ accentColor: 'var(--accent-primary)', cursor: 'pointer' }} aria-label="Select All Journeys" />
                 </th>
@@ -223,7 +223,7 @@ export default function JourneyCatalog() {
       </div>
 
       {selectedJourneys.length > 0 && createPortal(
-        <div className="animate-slide-up" style={{ position: 'fixed', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-full)', padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem', boxShadow: 'var(--shadow-lg)', zIndex: 100 }}>
+        <div className="animate-slide-up" style={{ position: 'fixed', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-full)', padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)', boxShadow: 'var(--shadow-lg)', zIndex: 100 }}>
           <div style={{ fontSize: '0.8125rem', fontWeight: '600' }}>{selectedJourneys.length} selected</div>
           <div style={{ width: '1px', height: '1.5rem', background: 'var(--border-color)' }} />
           <div className="flex gap-2">
@@ -260,9 +260,9 @@ export default function JourneyCatalog() {
 
       {/* Deletion Verification Modal */}
       {deleteTarget && createPortal(
-        <div className="animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: 'var(--bg-surface)', padding: '2rem', borderRadius: 'var(--radius-lg)', width: '25rem', boxShadow: 'var(--shadow-lg)' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-danger)' }}>
+        <div className="animate-fade-in" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: 'var(--bg-surface)', padding: 'var(--panel-padding)', borderRadius: 'var(--radius-lg)', width: '25rem', boxShadow: 'var(--shadow-lg)' }}>
+            <h2 style={{ fontWeight: '600', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-danger)' }}>
               <Trash2 size={20} /> Delete Journey
             </h2>
             <p className="text-secondary" style={{ fontSize: '0.875rem', marginBottom: '1.5rem' }}>
@@ -270,7 +270,7 @@ export default function JourneyCatalog() {
             </p>
             
             {verificationError && (
-              <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--accent-danger)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.5rem', color: 'var(--accent-danger)', fontSize: '0.8125rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ border: '1px solid var(--accent-danger)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.5rem', color: 'var(--accent-danger)', fontSize: '0.8125rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <AlertCircle size={14} /> {verificationError}
               </div>
             )}

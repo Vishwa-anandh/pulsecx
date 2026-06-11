@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Activity, Terminal, Route, Menu, X, ShieldAlert, Users, Settings, User, MonitorPlay } from 'lucide-react';
+import { LayoutDashboard, Activity, Terminal, Route, Menu, X, ShieldAlert, Users, Settings, User, MonitorPlay, Network, ShieldCheck, Smartphone, BarChart2 } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
 export default function BottomNav() {
@@ -17,11 +17,18 @@ export default function BottomNav() {
   }, [isMenuOpen]);
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
+    { name: 'Overview', path: '/', icon: <LayoutDashboard size={20} /> },
     { name: 'Operations', path: '/operations', icon: <Activity size={20} /> },
     { name: 'Engineering', path: '/engineering', icon: <Terminal size={20} /> },
     { name: 'Journeys', path: '/journeys', icon: <Route size={20} /> },
     { name: 'Monitoring', path: '/monitoring', icon: <MonitorPlay size={20} /> },
+  ];
+
+  const extraDashboards = [
+    { name: 'APIs', path: '/api', icon: <Network size={20} /> },
+    { name: 'SSL & DNS', path: '/ssl-dns', icon: <ShieldCheck size={20} /> },
+    { name: 'Mobile App', path: '/mobile', icon: <Smartphone size={20} /> },
+    { name: 'Analytics', path: '/analytics', icon: <BarChart2 size={20} /> },
   ];
 
   const secondaryItems = [
@@ -92,7 +99,7 @@ export default function BottomNav() {
             outline: 'none'
           }}
         >
-          <div className="flex justify-between items-center" style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)' }}>
+          <div className="flex justify-between items-center" style={{ padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <div style={{ width: '32px', height: '4px', background: 'var(--border-color)', borderRadius: '2px', position: 'absolute', top: '8px', left: '50%', transform: 'translateX(-50%)' }} />
               <h3 style={{ margin: 0, marginTop: '12px' }}>More Options</h3>
@@ -100,15 +107,29 @@ export default function BottomNav() {
             <button className="btn-icon" style={{ marginTop: '12px' }} onClick={() => setIsMenuOpen(false)}><X size={20} /></button>
           </div>
           
-          <div className="flex-col" style={{ padding: '0.5rem' }}>
-            <div style={{ padding: '0.5rem 1rem', fontSize: '0.7rem', fontWeight: '600', color: 'var(--text-muted)'}}>Management</div>
+          <div className="flex-col" style={{ padding: '0.5rem', overflowY: 'auto' }}>
+            <div style={{ padding: '0.5rem 1rem', fontSize: '0.7rem', fontWeight: '600', color: 'var(--text-muted)'}}>Dashboards</div>
+            {extraDashboards.map(item => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onClick={() => setIsMenuOpen(false)}
+                style={{ padding: 'var(--panel-padding)', fontSize: '1rem' }}
+              >
+                {React.cloneElement(item.icon, { color: 'currentcolor' })}
+                <span>{item.name}</span>
+              </NavLink>
+            ))}
+            
+            <div style={{ padding: '0.5rem 1rem', fontSize: '0.7rem', fontWeight: '600', color: 'var(--text-muted)', marginTop: '0.5rem'}}>Management</div>
             {secondaryItems.map(item => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
-                style={{ padding: '1rem', fontSize: '1rem' }}
+                style={{ padding: 'var(--panel-padding)', fontSize: '1rem' }}
               >
                 {React.cloneElement(item.icon, { color: 'currentcolor' })}
                 <span>{item.name}</span>
@@ -116,8 +137,8 @@ export default function BottomNav() {
             ))}
           </div>
 
-          <div style={{ padding: '1rem', borderTop: '1px solid var(--border-color)', marginTop: 'auto' }}>
-            <div className="flex items-center gap-3" style={{ background: 'var(--bg-surface-hover)', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
+          <div style={{ padding: 'var(--panel-padding)', borderTop: '1px solid var(--border-color)', marginTop: 'auto' }}>
+            <div className="flex items-center gap-3" style={{ padding: 'var(--panel-padding)', borderRadius: 'var(--radius-md)' }}>
               <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: 'var(--border-highlight)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <User size={20} color="var(--text-primary)" />
               </div>

@@ -4,22 +4,24 @@ import Sidebar from './Sidebar';
 import BottomNav from './BottomNav';
 import SearchModal from './SearchModal';
 import AIChatBot from './AIChatBot';
+import { OnboardingModal } from './OnboardingModal';
 
 export default function Layout() {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [isChatOpen, setIsChatOpen] = React.useState(false);
 
-  // Global hotkey
+  const handleKeyDown = (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      setIsSearchOpen(true);
+    }
+  };
+
   React.useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsSearchOpen(true);
-      }
-    };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
   return (
     <div className="dashboard-layout" style={{ position: 'relative' }}>
       {/* Ambient Translucent Background Orbs */}
@@ -30,7 +32,8 @@ export default function Layout() {
       <a href="#main-content" className="skip-link" style={{ zIndex: 100 }}>Skip to main content</a>
       <Sidebar setIsSearchOpen={setIsSearchOpen} />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <main className="main-content" id="main-content" tabIndex="-1" style={{ outline: 'none', transition: 'padding-right 0.3s ease', paddingRight: isChatOpen ? '400px' : '0' }}>
+      <OnboardingModal />
+      <main className="main-content" id="main-content" tabIndex="-1" style={{ outline: 'none', transition: 'margin-right 0.3s ease', marginRight: isChatOpen ? '400px' : '0' }}>
         <div className="scroll-wrapper">
           <div className="content-area animate-fade-in">
             <Outlet />

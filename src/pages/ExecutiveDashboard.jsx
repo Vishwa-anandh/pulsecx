@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, ReferenceLine, Legend } from 'recharts';
-import { ArrowUpRight, ArrowDownRight, Activity, Users, AlertCircle, CheckCircle, Info, Calendar, Maximize2, GripVertical } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Activity, Users, AlertCircle, CheckCircle, Info, Calendar, Maximize2, GripVertical, Globe, Apple, Smartphone, Smile } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useUsers } from '../context/UserContext';
+import EmptyState from '../components/EmptyState';
 
 import mockData from '../data/mockDatabase.json';
 
@@ -13,16 +16,16 @@ function KPICard({ title, value, change, isPositive, icon, tooltip, index, color
     );
   }
   return (
-    <div className="glass-panel glow-card group" style={{ background: 'var(--bg-surface)', color: 'inherit', padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column', gap: '0.75rem', animation: `fadeIn 0.5s ease forwards ${index * 0.1}s`, opacity: 0, cursor: 'grab', position: 'relative', border: '1px solid var(--border-color)' }}>
-      <div className="flex justify-between items-center">
+    <div className="glass-panel glow-card group" style={{ background: 'var(--bg-surface)', color: 'inherit', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem', animation: `fadeIn 0.5s ease forwards ${index * 0.1}s`, opacity: 0, cursor: 'grab', position: 'relative', border: '1px solid var(--border-color)' }}>
+      <div className="flex justify-between items-start">
         <div className="flex items-center gap-1.5" title={tooltip} style={{ cursor: 'help' }}>
           <div style={{ opacity: 0, transition: 'opacity 0.2s', position: 'absolute', left: '-12px', top: '50%', transform: 'translateY(-50%)' }} className="group-hover:opacity-100 hidden md:block">
             <GripVertical size={16} color="var(--border-highlight)" />
           </div>
-          <span style={{ color: 'var(--text-secondary)', fontWeight: '500', fontSize: '0.875rem' }}>{title}</span>
+          <span style={{ color: 'var(--text-secondary)', fontWeight: '500', fontSize: '0.875rem', lineHeight: 1 }}>{title}</span>
           <Info size={14} color="var(--text-muted)" />
         </div>
-        <div style={{ padding: '0.5rem', background: 'var(--bg-surface-hover)', borderRadius: 'var(--radius-md)' }}>
+        <div>
           {icon}
         </div>
       </div>
@@ -70,6 +73,7 @@ const CustomLegend = (props) => {
 };
 
 export default function ExecutiveDashboard() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('24h');
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -81,14 +85,25 @@ export default function ExecutiveDashboard() {
     return () => clearTimeout(timer);
   }, []);
 
+  const { currentUser } = useUsers();
+
+  if (!currentUser?.isDemo) {
+    return (
+      <EmptyState 
+        title="Executive Overview" 
+        description="Connect your business metrics and core systems to start populating this dashboard." 
+      />
+    );
+  }
+
   return (
     <div className="flex-col gap-4" style={{ paddingBottom: '2rem' }}>
-      <div className="flex justify-between items-center" style={{ marginBottom: '0.5rem' }}>
-        <div>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.125rem' }}>Platform Overview</h1>
+      <div className="flex flex-wrap justify-between items-center gap-4" style={{ marginBottom: '0.5rem' }}>
+        <div style={{ minWidth: '250px' }}>
+          <h1 style={{ marginBottom: '0.125rem' }}>Platform Overview</h1>
           <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Real-time business performance and customer experience metrics.</p>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex flex-wrap gap-2 items-center">
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             <Calendar size={14} style={{ position: 'absolute', left: '10px', color: 'var(--text-muted)' }} />
             <select 
@@ -136,7 +151,7 @@ export default function ExecutiveDashboard() {
       <div className="grid grid-cols-3 gap-4">
         <div className={`glass-panel ${isFullScreen ? 'fixed inset-0 z-50 m-4 flex-col' : 'col-span-2'}`} style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column', background: isFullScreen ? 'var(--bg-base)' : undefined }}>
           <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-            <h3 style={{ fontSize: '1rem', margin: 0 }}>Experience Trend ({timeRange})</h3>
+            <h3 style={{ margin: 0 }}>Experience Trend ({timeRange})</h3>
           </div>
           <div className="chart-container" style={{ flex: isFullScreen ? 1 : undefined, minHeight: isFullScreen ? '400px' : undefined }}>
             {loading ? <div className="skeleton" style={{ width: '100%', height: '100%', borderRadius: 'var(--radius-sm)' }} /> : (
@@ -161,10 +176,10 @@ export default function ExecutiveDashboard() {
         </div>
 
         <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column' }}>
-          <h3 style={{ marginBottom: '1rem', fontSize: '1rem' }}>Top Failing Journeys</h3>
+          <h3 style={{ marginBottom: '1rem' }}>Top Failing Journeys</h3>
           <div className="flex-col gap-2" style={{ flex: 1 }}>
             {failingJourneys.map((journey) => (
-              <div key={journey.id} className="flex justify-between items-center" style={{ padding: '0.6rem 0.75rem', background: 'rgba(128,128,128,0.05)', borderRadius: 'var(--radius-sm)', borderBottom: '1px solid rgba(128,128,128,0.1)' }}>
+              <div key={journey.id} className="flex justify-between items-center" style={{ padding: '0.6rem 0.75rem', borderRadius: 'var(--radius-sm)', borderBottom: '1px solid rgba(128,128,128,0.1)' }}>
                 <div className="flex-col gap-1">
                   <span style={{ fontWeight: '500', fontSize: '0.8125rem' }}>{journey.name}</span>
                   <span className="text-muted" style={{ fontSize: '0.7rem' }}>{journey.id}</span>
@@ -173,13 +188,13 @@ export default function ExecutiveDashboard() {
               </div>
             ))}
           </div>
-          <button className="btn btn-ghost" style={{ width: '100%', marginTop: '0.75rem' }}>View All Journeys</button>
+          <button className="btn btn-ghost" onClick={() => navigate('/journeys')} style={{ width: '100%', marginTop: '0.75rem' }}>View All Journeys</button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
-          <h3 style={{ marginBottom: '1rem', fontSize: '1rem' }}>Service Availability</h3>
+          <h3 style={{ marginBottom: '1rem' }}>Service Availability</h3>
           <div className="chart-container flex-1 min-h-0 relative">
             {loading ? <div className="skeleton" style={{ width: '100%', height: '100%', borderRadius: 'var(--radius-sm)' }} /> : (
             <ResponsiveContainer width="100%" height="100%">
@@ -197,32 +212,63 @@ export default function ExecutiveDashboard() {
           </div>
         </div>
 
-        <div className="glass-panel" style={{ padding: '0', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'var(--bg-surface)' }}>
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '100%', zIndex: 0, opacity: 0.15 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={impactData}>
-                <defs>
-                  <linearGradient id="colorRisk" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--accent-danger)" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="var(--accent-danger)" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="value" stroke="var(--accent-danger)" strokeWidth={3} fillOpacity={1} fill="url(#colorRisk)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-          <div style={{ textAlign: 'left', padding: '2.5rem', zIndex: 1, position: 'relative' }}>
-            <h3 style={{ marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: '600' }}>Customer Impact Risk</h3>
-            <p style={{ fontSize: '0.9375rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Estimated revenue risk due to active incidents over the last 6 hours.</p>
-            <div style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.03em', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ color: 'var(--accent-danger)' }}>$</span>42,500
+        <div className="glass-panel flex-col justify-between" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column', gap: '1.5rem', background: 'var(--bg-surface)' }}>
+          <div className="flex justify-between items-center">
+            <h3 style={{ margin: 0 }}>User Demographics & Engagement</h3>
+            <div className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', padding: '0.2rem 0.5rem' }}>
+              <ArrowUpRight size={14} /> +12% Active
             </div>
-            <div className="flex gap-3">
-              <div className="badge" style={{ background: 'var(--bg-surface-hover)', color: 'var(--text-primary)', border: '1px solid var(--border-highlight)', padding: '0.5rem 1rem', borderRadius: '50px' }}>Priority <span style={{ background: 'var(--accent-danger)', color: '#fff', padding: '2px 6px', borderRadius: '50%', marginLeft: '4px' }}>1</span></div>
-              <div className="badge" style={{ background: 'var(--bg-base)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: '50px' }}>Threat Level 8</div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-4">
+            <div className="flex-col gap-1">
+              <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Active Users (24h)</span>
+              <span style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>124.5K</span>
+            </div>
+            <div className="flex-col gap-1" style={{ borderLeft: '1px solid var(--border-color)', paddingLeft: '1.25rem' }}>
+              <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>CSAT Score</span>
+              <div className="flex items-center gap-1">
+                <span style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--accent-primary)', letterSpacing: '-0.02em' }}>4.6</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>/5.0</span>
+              </div>
+            </div>
+            <div className="flex-col gap-1" style={{ borderLeft: '1px solid var(--border-color)', paddingLeft: '1.25rem' }}>
+              <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Net Promoter</span>
+              <div className="flex items-center gap-2">
+                <span style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--accent-success)', letterSpacing: '-0.02em' }}>72</span>
+                <Smile size={18} color="var(--accent-success)" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-col gap-2">
+            <div className="flex justify-between items-end" style={{ marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-primary)' }}>Platform Distribution</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Last 30 Days</span>
+            </div>
+            
+            {/* Horizontal Stacked Bar */}
+            <div className="flex" style={{ height: '24px', borderRadius: '12px', overflow: 'hidden', gap: '2px' }}>
+              <div className="tooltip-container flex items-center justify-center hover-scale" data-tooltip="Web / Desktop (45%)" style={{ width: '45%', background: 'var(--accent-primary)', color: 'white', cursor: 'pointer' }}>
+                <Globe size={14} />
+              </div>
+              <div className="tooltip-container flex items-center justify-center hover-scale" data-tooltip="iOS (35%)" style={{ width: '35%', background: 'var(--accent-purple)', color: 'white', cursor: 'pointer' }}>
+                <Apple size={14} />
+              </div>
+              <div className="tooltip-container flex items-center justify-center hover-scale" data-tooltip="Android (20%)" style={{ width: '20%', background: 'var(--accent-success)', color: 'white', cursor: 'pointer' }}>
+                <Smartphone size={14} />
+              </div>
+            </div>
+            
+            {/* Legend */}
+            <div className="flex justify-between items-center mt-2" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              <div className="flex items-center gap-1.5"><div style={{ width: '8px', height: '8px', borderRadius: '2px', background: 'var(--accent-primary)' }}></div> Web (45%)</div>
+              <div className="flex items-center gap-1.5"><div style={{ width: '8px', height: '8px', borderRadius: '2px', background: 'var(--accent-purple)' }}></div> iOS (35%)</div>
+              <div className="flex items-center gap-1.5"><div style={{ width: '8px', height: '8px', borderRadius: '2px', background: 'var(--accent-success)' }}></div> Android (20%)</div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );

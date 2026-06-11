@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Activity, CheckCircle, XCircle, PauseCircle, Play, Pause, Edit2, Globe, Smartphone, Monitor as MonitorIcon, Clock, FileText, ChevronDown, ChevronUp, Copy, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { useUsers } from '../context/UserContext';
+import EmptyState from '../components/EmptyState';
 
 import mockData from '../data/mockDatabase.json';
 
@@ -16,7 +18,7 @@ const generateTrendData = (base, volatility) => {
 
 function MetricCard({ title, value, icon, color }) {
   return (
-    <div className="glass-panel glow-card" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', '--card-color': color }}>
+    <div className="glass-panel glow-card" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column', gap: '0.25rem', '--card-color': color }}>
       <div className="flex justify-between items-start">
         <span style={{ color: 'var(--text-secondary)', fontWeight: '500', fontSize: '0.8125rem' }}>{title}</span>
         <div style={{ padding: '0.4rem', background: `rgba(${color}, 0.1)`, borderRadius: 'var(--radius-sm)' }}>
@@ -29,8 +31,18 @@ function MetricCard({ title, value, icon, color }) {
 }
 
 export default function MonitoringDashboard() {
+  const { currentUser } = useUsers();
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [logsCollapsed, setLogsCollapsed] = useState(false);
+
+  if (!currentUser?.isDemo) {
+    return (
+      <EmptyState 
+        title="Proactive Monitoring" 
+        description="Set up synthetic tests and browser monitoring to ensure site availability." 
+      />
+    );
+  }
   
   const [logs, setLogs] = useState(initialLogs);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
@@ -80,7 +92,7 @@ export default function MonitoringDashboard() {
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
           <div>
-            <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Monitoring Dashboard</h1>
+            <h1 style={{ marginBottom: '0.25rem' }}>Monitoring Dashboard</h1>
             <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Proactive tracking of synthetic workflows, real users, and regional performance.</p>
           </div>
         </div>
@@ -116,12 +128,11 @@ export default function MonitoringDashboard() {
         <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column' }}>
           <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <MonitorIcon size={16} color="var(--accent-purple)" />
-            <h3 style={{ fontSize: '1rem', margin: 0 }}>Browser Performance</h3>
+            <h3 style={{ margin: 0 }}>Browser Performance</h3>
           </div>
           <div className="flex-col gap-3" style={{ flex: 1 }}>
             {enhancedBrowserMetrics.map(metric => (
-              <div key={metric.name} className="flex justify-between items-center gap-2" style={{ padding: '0.75rem', background: 'var(--bg-surface-hover)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: metric.status === 'success' ? 'var(--accent-success)' : metric.status === 'warning' ? 'var(--accent-warning)' : 'var(--accent-danger)' }}></div>
+              <div key={metric.name} className="flex justify-between items-center gap-2" style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
                 <div className="flex-col gap-1" style={{ paddingLeft: '0.5rem' }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>{metric.name}</span>
                   <div className="flex items-end gap-2">
@@ -144,7 +155,7 @@ export default function MonitoringDashboard() {
         <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column' }}>
           <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Globe size={16} color="var(--accent-success)" />
-            <h3 style={{ fontSize: '1rem', margin: 0 }}>Global Latency</h3>
+            <h3 style={{ margin: 0 }}>Global Latency</h3>
           </div>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ResponsiveContainer width="100%" height={220}>
@@ -162,7 +173,7 @@ export default function MonitoringDashboard() {
         <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column' }}>
           <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Smartphone size={16} color="var(--accent-primary)" />
-            <h3 style={{ fontSize: '1rem', margin: 0 }}>Mobile UX Scores</h3>
+            <h3 style={{ margin: 0 }}>Mobile UX Scores</h3>
           </div>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
             <ResponsiveContainer width="100%" height={220}>
@@ -182,13 +193,13 @@ export default function MonitoringDashboard() {
       </div>
 
       {/* Row 3: Synthetic Monitors (30%) and Execution Logs (70%) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 7fr', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '3fr 7fr', gap: 'var(--panel-gap)' }}>
         
         {/* Synthetic Monitors (30%) */}
         <div className="glass-panel" style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Activity size={16} color="var(--accent-primary)" />
-          <h3 style={{ fontSize: '1rem', margin: 0 }}>Synthetic Monitors</h3>
+          <h3 style={{ margin: 0 }}>Synthetic Monitors</h3>
         </div>
         <div style={{ flex: 1, overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '400px' }} role="table">
@@ -207,7 +218,7 @@ export default function MonitoringDashboard() {
                     <div style={{ fontWeight: '500', fontSize: '0.875rem' }}>{mon.name}</div>
                     <div className="flex items-center gap-2 mt-1">
                       <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{mon.id}</div>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'rgba(128,128,128,0.1)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
                         <Clock size={10} /> {mon.frequency}
                       </span>
                     </div>
@@ -222,8 +233,8 @@ export default function MonitoringDashboard() {
                   </td>
                   <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                      <button className="btn-ghost tooltip-container" title="Run Now" style={{ padding: '6px', borderRadius: '8px', background: 'var(--bg-surface-hover)', border: '1px solid var(--border-color)', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Play size={14} /></button>
-                      <button className="btn-ghost tooltip-container" title="Pause" style={{ padding: '6px', borderRadius: '8px', background: 'var(--bg-surface-hover)', border: '1px solid var(--border-color)', color: 'var(--accent-warning)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Pause size={14} /></button>
+                      <button className="btn-ghost tooltip-container" title="Run Now" style={{ padding: '6px', borderRadius: '8px', border: '1px solid var(--border-color)', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Play size={14} /></button>
+                      <button className="btn-ghost tooltip-container" title="Pause" style={{ padding: '6px', borderRadius: '8px', border: '1px solid var(--border-color)', color: 'var(--accent-warning)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Pause size={14} /></button>
                     </div>
                   </td>
                 </tr>
@@ -241,7 +252,7 @@ export default function MonitoringDashboard() {
         >
           <div className="flex items-center gap-0.5">
             <FileText size={16} color="var(--text-muted)" />
-            <h3 style={{ fontSize: '1rem', margin: 0, marginLeft: '0.5rem' }}>Recent Execution Logs</h3>
+            <h3 style={{ margin: 0, marginLeft: '0.5rem' }}>Recent Execution Logs</h3>
           </div>
           {logsCollapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
         </div>
@@ -279,7 +290,7 @@ export default function MonitoringDashboard() {
                 const isExpanded = expandedGroups[group];
                 return (
                   <React.Fragment key={group}>
-                    <tr onClick={() => toggleGroup(group)} style={{ background: 'var(--bg-surface-hover)', cursor: 'pointer', borderBottom: '1px solid var(--border-color)' }}>
+                    <tr onClick={() => toggleGroup(group)} style={{ cursor: 'pointer', borderBottom: '1px solid var(--border-color)' }}>
                       <td colSpan={4} style={{ padding: '0.5rem 1rem', fontSize: '0.8125rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
                         <div className="flex items-center gap-2">
                           {isExpanded ? <ChevronDown size={14} /> : <ChevronUp size={14} />}

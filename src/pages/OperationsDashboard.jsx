@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Activity, ShieldAlert, ServerCrash, Clock, CheckCircle2, AlertTriangle, XCircle, Search, Server } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useUsers } from '../context/UserContext';
+import EmptyState from '../components/EmptyState';
 
 const activeAlerts = [
   { id: 'AL-901', component: 'Payment Gateway', issue: 'High latency detected in US-East region', severity: 'critical', time: '5m ago' },
@@ -43,7 +46,18 @@ function StatusWidget({ title, status, metric, subtext }) {
 }
 
 export default function OperationsDashboard() {
+  const navigate = useNavigate();
+  const { currentUser } = useUsers();
   const [selectedAlerts, setSelectedAlerts] = useState([]);
+
+  if (!currentUser?.isDemo) {
+    return (
+      <EmptyState 
+        title="Operations Hub" 
+        description="Connect your infrastructure and services to monitor alerts and incidents." 
+      />
+    );
+  }
 
   const toggleAlert = (id) => {
     setSelectedAlerts(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]);
@@ -61,7 +75,7 @@ export default function OperationsDashboard() {
     <div className="flex-col gap-4" style={{ paddingBottom: '2rem' }}>
       <div className="flex justify-between items-center" style={{ marginBottom: '0.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.125rem' }}>Operations Command Center</h1>
+          <h1 style={{ marginBottom: '0.125rem' }}>Operations Command Center</h1>
           <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>Monitor system health, active alerts, and incident response.</p>
         </div>
       </div>
@@ -77,7 +91,7 @@ export default function OperationsDashboard() {
         <div className="glass-panel col-span-2" style={{ padding: 'var(--panel-padding)' }}>
           <div className="flex justify-between items-center" style={{ marginBottom: '1.25rem' }}>
             <div className="flex items-center gap-2">
-              <h3 style={{ fontSize: '1rem', margin: 0 }}>Active Alerts</h3>
+              <h3 style={{ margin: 0 }}>Active Alerts</h3>
               <div className="badge badge-danger">1 Critical</div>
             </div>
             <button 
@@ -120,11 +134,11 @@ export default function OperationsDashboard() {
         </div>
 
         <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column' }}>
-          <h3 style={{ marginBottom: '1.25rem', fontSize: '1rem' }}>Recent Incidents</h3>
+          <h3 style={{ marginBottom: '1.25rem' }}>Recent Incidents</h3>
           <div className="flex-col gap-3" style={{ flex: 1 }}>
             {recentIncidents.map((incident) => (
               <div key={incident.id} className="flex gap-3" style={{ padding: '0.75rem', background: 'var(--bg-base)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
-                <div style={{ position: 'relative', width: '40px', height: '40px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'relative', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Server size={20} color="var(--accent-danger)" />
                   <div style={{ position: 'absolute', top: 0, right: 0, width: '10px', height: '10px', background: 'var(--accent-danger)', borderRadius: '50%', border: '2px solid var(--bg-surface)' }}></div>
                 </div>
@@ -141,7 +155,7 @@ export default function OperationsDashboard() {
               </div>
             ))}
           </div>
-          <button className="btn btn-ghost" style={{ width: '100%', marginTop: '1rem' }}>View Incident History</button>
+          <button className="btn btn-ghost" onClick={() => navigate('/incidents')} style={{ width: '100%', marginTop: '1rem' }}>View Incident History</button>
         </div>
       </div>
     </div>

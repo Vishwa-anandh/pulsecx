@@ -68,7 +68,7 @@ export default function JourneyDetails() {
               <span style={{ color: 'var(--text-primary)' }}>Checkout Payment Flow</span>
             </nav>
             <div className="flex items-center gap-3">
-              <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Checkout Payment Flow</h1>
+              <h1 style={{ margin: 0 }}>Checkout Payment Flow</h1>
               <div className="badge badge-warning">Warning</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-full)', padding: '0.2rem 0.5rem' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-success)', boxShadow: '0 0 8px var(--accent-success)' }} />
@@ -104,25 +104,25 @@ export default function JourneyDetails() {
       </div>
 
       {/* Unified Scrolling Content */}
-      <div style={{ paddingBottom: '4rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div style={{ paddingBottom: '4rem', display: 'flex', flexDirection: 'column', gap: 'var(--panel-gap)' }}>
         
         {/* Row 1: Key Metrics */}
         <div className="grid grid-cols-4 gap-4">
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'relative', overflow: 'hidden' }}>
+          <div className="glass-panel" style={{ padding: 'var(--panel-padding)', position: 'relative', overflow: 'hidden' }}>
             <div className="text-secondary" style={{ fontSize: '0.75rem', fontWeight: '600', marginBottom: '0.5rem' }}>Success Rate</div>
             <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--accent-warning)' }}>85.2%</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--accent-danger)', fontWeight: '600', marginTop: '0.5rem' }}>↓ 1.4% from last week</div>
           </div>
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
             <div className="text-secondary" style={{ fontSize: '0.75rem', fontWeight: '600', marginBottom: '0.5rem' }}>Avg Duration</div>
             <div style={{ fontSize: '2rem', fontWeight: '700' }}>3.1s</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--accent-success)', fontWeight: '600', marginTop: '0.5rem' }}>↑ 0.2s faster</div>
           </div>
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
             <div className="text-secondary" style={{ fontSize: '0.75rem', fontWeight: '600', marginBottom: '0.5rem' }}>Total Runs</div>
             <div style={{ fontSize: '2rem', fontWeight: '700' }}>3,200</div>
           </div>
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
             <div className="text-secondary" style={{ fontSize: '0.75rem', fontWeight: '600', marginBottom: '0.5rem' }}>Failing Locations</div>
             <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--accent-danger)' }}>1</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600', marginTop: '0.5rem' }}>EU (Frankfurt)</div>
@@ -131,9 +131,9 @@ export default function JourneyDetails() {
 
         {/* Row 2: Analytics Charts */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
             <div className="flex justify-between items-center mb-4">
-              <h3 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Response Time Distribution</h3>
+              <h3 style={{ color: 'var(--text-secondary)' }}>Response Time Distribution</h3>
               <button className="btn-icon" style={{ color: 'var(--text-muted)' }} title="Export Chart"><Download size={14}/></button>
             </div>
             <div style={{ height: '15.625rem' }}>
@@ -154,9 +154,9 @@ export default function JourneyDetails() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+          <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
             <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-              <h3 style={{ fontSize: '1rem', margin: 0 }}>Geographic Latency (ms)</h3>
+              <h3 style={{ margin: 0 }}>Geographic Latency (ms)</h3>
             </div>
             <div style={{ height: '15.625rem' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -173,11 +173,11 @@ export default function JourneyDetails() {
         </div>
 
         {/* Row 3: Executions & Waterfall */}
-        <div className="grid grid-cols-3 gap-6" style={{ alignItems: 'start' }}>
+        <div className="grid grid-cols-3 gap-4" style={{ alignItems: 'start' }}>
           
           {/* Execution List */}
           <div className="glass-panel" style={{ padding: '0', display: 'flex', flexDirection: 'column' }}>
-            <div className="flex justify-between items-center" style={{ padding: '1rem', borderBottom: '1px solid var(--border-color)' }}>
+            <div className="flex justify-between items-center" style={{ padding: 'var(--panel-padding)', borderBottom: '1px solid var(--border-color)' }}>
               <span style={{ fontWeight: '600' }}>Recent Executions</span>
               <div className="flex gap-2">
                 <span className="badge badge-primary" style={{ cursor: 'pointer' }}>All</span>
@@ -190,7 +190,7 @@ export default function JourneyDetails() {
                   key={run.id}
                   onClick={() => setSelectedRun(run)}
                   style={{ 
-                    padding: '1rem', 
+                    padding: 'var(--panel-padding)', 
                     borderBottom: '1px solid var(--border-color)', 
                     cursor: 'pointer',
                     background: selectedRun?.id === run.id ? 'var(--bg-surface-hover)' : 'transparent',
@@ -214,10 +214,10 @@ export default function JourneyDetails() {
           {/* Execution Details (Waterfall & Screenshot) */}
           {selectedRun && (
             <div className="col-span-2 flex-col gap-4">
-              <div className="glass-panel" style={{ padding: '1.5rem' }}>
+              <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
                 <div className="flex justify-between items-center" style={{ marginBottom: '1.5rem' }}>
                   <div>
-                    <h3 style={{ fontSize: '1rem', margin: 0 }}>Execution Details: {selectedRun.id}</h3>
+                    <h3 style={{ margin: 0 }}>Execution Details: {selectedRun.id}</h3>
                     <p className="text-secondary" style={{ fontSize: '0.8125rem' }}>{selectedRun.location} • {selectedRun.time}</p>
                   </div>
                   <div className="flex gap-2">
@@ -228,7 +228,7 @@ export default function JourneyDetails() {
                 
                 <div className="flex-col gap-0" style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
                   {failedRunSteps.map((step, i) => (
-                    <div key={i} style={{ padding: '1rem', borderBottom: i < failedRunSteps.length - 1 ? '1px solid var(--border-color)' : 'none', background: step.status === 'failed' ? 'rgba(239,68,68,0.05)' : 'var(--bg-base)' }}>
+                    <div key={i} style={{ padding: 'var(--panel-padding)', borderBottom: i < failedRunSteps.length - 1 ? '1px solid var(--border-color)' : 'none', background: step.status === 'failed' ? 'rgba(239,68,68,0.05)' : 'var(--bg-base)' }}>
                       <div className="flex justify-between items-center" style={{ marginBottom: step.error ? '0.75rem' : '0' }}>
                         <div className="flex items-center gap-3">
                           {step.status === 'passed' ? <CheckCircle size={16} className="text-success" /> : <XCircle size={16} className="text-danger" />}
@@ -240,7 +240,7 @@ export default function JourneyDetails() {
                         </div>
                       </div>
                       {step.error && (
-                        <div style={{ background: '#1E1E1E', padding: '1rem', borderRadius: 'var(--radius-sm)', fontFamily: 'monospace', fontSize: '0.75rem', color: '#F14C4C', border: '1px solid #333' }}>
+                        <div style={{ background: '#1E1E1E', padding: 'var(--panel-padding)', borderRadius: 'var(--radius-sm)', fontFamily: 'monospace', fontSize: '0.75rem', color: '#F14C4C', border: '1px solid #333' }}>
                           {step.error}
                         </div>
                       )}
@@ -250,17 +250,17 @@ export default function JourneyDetails() {
               </div>
 
               {selectedRun.status === 'Failed' && (
-                <div className="glass-panel" style={{ padding: '1.5rem' }}>
+                <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
                   <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
-                    <h3 style={{ fontSize: '1rem', margin: 0 }}>DOM Snapshot</h3>
+                    <h3 style={{ margin: 0 }}>DOM Snapshot</h3>
                     <button className="btn btn-ghost text-primary" style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}>View Source HTML</button>
                   </div>
-                  <div style={{ width: '100%', height: '18.75rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ width: '100%', height: '18.75rem', background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 'var(--panel-gap)', color: 'var(--text-muted)', position: 'relative', overflow: 'hidden' }}>
                     <ImageIcon size={48} opacity={0.5} />
                     <span style={{ fontSize: '0.8125rem' }}>Screenshot captured at point of failure</span>
                     
                     {/* Fake progress/scrubber bar for video replay */}
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2.5rem', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', padding: '0 1rem', gap: '1rem' }}>
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2.5rem', display: 'flex', alignItems: 'center', padding: '0 1rem', gap: 'var(--panel-gap)' }}>
                       <Play size={14} className="text-primary" style={{ cursor: 'pointer' }} />
                       <div style={{ flex: 1, height: '4px', background: 'var(--bg-surface)', borderRadius: '2px', position: 'relative' }}>
                         <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '85%', background: 'var(--accent-primary)', borderRadius: '2px' }} />

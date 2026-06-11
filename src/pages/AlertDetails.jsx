@@ -21,16 +21,16 @@ export default function AlertDetails() {
   };
 
   return (
-    <div className="flex-col gap-6 animate-fade-in" style={{ paddingBottom: '2rem' }}>
+    <div className="flex-col gap-4 animate-fade-in" style={{ paddingBottom: '2rem' }}>
       
       {/* Hero Banner */}
       <div className="glass-panel" style={{ 
         background: alert.severity === 'Critical' ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, var(--bg-surface) 100%)' : 'var(--bg-surface)', 
         border: '1px solid var(--border-color)',
-        padding: '2rem',
+        padding: 'var(--panel-padding)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem'
+        gap: 'var(--panel-gap)'
       }}>
         <div className="flex gap-4" style={{ alignItems: 'flex-start' }}>
           <button className="btn-icon" onClick={() => navigate('/alerts')} style={{ marginTop: '0.25rem', background: 'var(--bg-base)' }}>
@@ -42,7 +42,7 @@ export default function AlertDetails() {
               <span className={`badge badge-${alert.status === 'Open' ? 'danger' : alert.status === 'Acknowledged' ? 'warning' : 'success'}`}>{alert.status}</span>
               <span className="badge" style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}><Clock size={10} style={{ marginRight: '4px' }}/> {alert.time}</span>
             </div>
-            <h1 style={{ fontSize: '2rem', margin: 0, fontWeight: '700', letterSpacing: '-0.02em' }}>{alert.trigger}</h1>
+            <h1 style={{ margin: 0, fontWeight: '700', letterSpacing: '-0.02em' }}>{alert.trigger}</h1>
             <p className="text-secondary" style={{ fontSize: '0.875rem', maxWidth: '800px', lineHeight: '1.5' }}>
               Synthetic monitoring detected that the average latency for the <strong style={{ color: 'var(--text-primary)' }}>{alert.service}</strong> exceeded the defined threshold of {alert.threshold}.
             </p>
@@ -55,9 +55,9 @@ export default function AlertDetails() {
       </div>
 
       {/* Metadata Section */}
-      <div className="grid grid-cols-3 gap-6">
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1.25rem', letterSpacing: '0.05em' }}>Alert Context</h3>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
+          <h3 style={{ color: 'var(--text-muted)', marginBottom: '1.25rem', letterSpacing: '0.05em' }}>Alert Context</h3>
           
           <div className="flex-col gap-4">
             <div className="flex items-center justify-between" style={{ paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-color)' }}>
@@ -95,10 +95,10 @@ export default function AlertDetails() {
         </div>
 
         {/* Visual Graph / Metric Representation */}
-        <div className="col-span-2 glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
-          <h3 style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1.25rem', letterSpacing: '0.05em' }}>Metric Telemetry</h3>
+        <div className="col-span-2 glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', flexDirection: 'column' }}>
+          <h3 style={{ color: 'var(--text-muted)', marginBottom: '1.25rem', letterSpacing: '0.05em' }}>Metric Telemetry</h3>
           
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'var(--bg-base)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', padding: '2rem', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'var(--bg-base)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', padding: 'var(--panel-padding)', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.1, backgroundImage: 'linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
             
             <div className="flex-col items-center gap-2 z-10">

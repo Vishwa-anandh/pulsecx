@@ -1,70 +1,86 @@
 import React, { useState } from 'react';
-import { Smartphone, Activity, CheckCircle, Apple, MonitorSmartphone, Wifi, BatteryCharging, Zap, Filter, Search } from 'lucide-react';
+import { Smartphone, Activity, CheckCircle, Apple, MonitorSmartphone, Wifi, BatteryCharging, Zap, Filter, Search, Play, RotateCcw } from 'lucide-react';
+import { useMobile } from '../context/MobileContext';
+import { useUsers } from '../context/UserContext';
+import EmptyState from '../components/EmptyState';
 
 export default function MobileHub() {
+  const { currentUser } = useUsers();
+  const { mobileState, simulateTrafficSpike, resetMetrics } = useMobile();
   const [activeTab, setActiveTab] = useState('Device Monitoring');
 
+  if (!currentUser?.isDemo) {
+    return (
+      <EmptyState 
+        title="Mobile Experience" 
+        description="Connect your iOS and Android apps to monitor performance, crashes, and user journeys." 
+      />
+    );
+  }
+
+  const { deviceStats, journeys, analytics, isSpiking } = mobileState;
+
   const renderDeviceMonitoring = () => (
-    <div className="grid grid-cols-2 gap-6 animate-fade-in">
+    <div className="grid grid-cols-2 gap-4 animate-fade-in">
       {/* Android Device Stats */}
-      <div className="glass-panel" style={{ padding: '1.5rem' }}>
+      <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
         <div className="flex items-center gap-3" style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-color)' }}>
-          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <MonitorSmartphone size={20} />
           </div>
-          <h3 style={{ margin: 0, fontSize: '1.25rem' }}>Android</h3>
+          <h3 style={{ margin: 0 }}>Android</h3>
         </div>
         <div className="flex-col gap-4">
           <div className="flex items-center justify-between">
             <span style={{ color: 'var(--text-secondary)' }}>Active Sessions</span>
-            <span style={{ fontWeight: '600' }}>42,501</span>
+            <span style={{ fontWeight: '600' }}>{deviceStats.android.sessions.toLocaleString()}</span>
           </div>
           <div className="flex items-center justify-between">
             <span style={{ color: 'var(--text-secondary)' }}>Crash-Free Users</span>
-            <span style={{ fontWeight: '600', color: 'var(--accent-success)' }}>99.1%</span>
+            <span style={{ fontWeight: '600', color: deviceStats.android.crashFree < 95 ? 'var(--accent-danger)' : 'var(--accent-success)' }}>{deviceStats.android.crashFree}%</span>
           </div>
           <div className="flex items-center justify-between">
             <span style={{ color: 'var(--text-secondary)' }}>Avg App Start Time</span>
-            <span style={{ fontWeight: '600' }}>1.2s</span>
+            <span style={{ fontWeight: '600', color: deviceStats.android.startupTime > 2 ? 'var(--accent-danger)' : 'var(--text-primary)' }}>{deviceStats.android.startupTime}s</span>
           </div>
           <div style={{ marginTop: '1rem' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)'}}>OS Distribution</span>
             <div className="flex gap-1" style={{ height: '8px', marginTop: '0.5rem', borderRadius: '4px', overflow: 'hidden' }}>
-              <div className="tooltip-container" data-tooltip="Android 14 (60%)" style={{ width: '60%', background: 'var(--accent-success)' }}></div>
-              <div className="tooltip-container" data-tooltip="Android 13 (25%)" style={{ width: '25%', background: 'var(--accent-warning)' }}></div>
-              <div className="tooltip-container" data-tooltip="Older (15%)" style={{ width: '15%', background: 'var(--border-highlight)' }}></div>
+              {deviceStats.android.osDist.map(os => (
+                <div key={os.name} className="tooltip-container" data-tooltip={`${os.name} (${os.percentage}%)`} style={{ width: `${os.percentage}%`, background: os.color }}></div>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
       {/* iOS Device Stats */}
-      <div className="glass-panel" style={{ padding: '1.5rem' }}>
+      <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
         <div className="flex items-center gap-3" style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border-color)' }}>
-          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Apple size={20} />
           </div>
-          <h3 style={{ margin: 0, fontSize: '1.25rem' }}>iPhone (iOS)</h3>
+          <h3 style={{ margin: 0 }}>iPhone (iOS)</h3>
         </div>
         <div className="flex-col gap-4">
           <div className="flex items-center justify-between">
             <span style={{ color: 'var(--text-secondary)' }}>Active Sessions</span>
-            <span style={{ fontWeight: '600' }}>58,102</span>
+            <span style={{ fontWeight: '600' }}>{deviceStats.ios.sessions.toLocaleString()}</span>
           </div>
           <div className="flex items-center justify-between">
             <span style={{ color: 'var(--text-secondary)' }}>Crash-Free Users</span>
-            <span style={{ fontWeight: '600', color: 'var(--accent-success)' }}>99.8%</span>
+            <span style={{ fontWeight: '600', color: deviceStats.ios.crashFree < 95 ? 'var(--accent-danger)' : 'var(--accent-success)' }}>{deviceStats.ios.crashFree}%</span>
           </div>
           <div className="flex items-center justify-between">
             <span style={{ color: 'var(--text-secondary)' }}>Avg App Start Time</span>
-            <span style={{ fontWeight: '600' }}>0.8s</span>
+            <span style={{ fontWeight: '600', color: deviceStats.ios.startupTime > 2 ? 'var(--accent-danger)' : 'var(--text-primary)' }}>{deviceStats.ios.startupTime}s</span>
           </div>
           <div style={{ marginTop: '1rem' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)'}}>OS Distribution</span>
             <div className="flex gap-1" style={{ height: '8px', marginTop: '0.5rem', borderRadius: '4px', overflow: 'hidden' }}>
-              <div className="tooltip-container" data-tooltip="iOS 17 (80%)" style={{ width: '80%', background: 'var(--accent-primary)' }}></div>
-              <div className="tooltip-container" data-tooltip="iOS 16 (15%)" style={{ width: '15%', background: 'var(--accent-warning)' }}></div>
-              <div className="tooltip-container" data-tooltip="Older (5%)" style={{ width: '5%', background: 'var(--border-highlight)' }}></div>
+              {deviceStats.ios.osDist.map(os => (
+                <div key={os.name} className="tooltip-container" data-tooltip={`${os.name} (${os.percentage}%)`} style={{ width: `${os.percentage}%`, background: os.color }}></div>
+              ))}
             </div>
           </div>
         </div>
@@ -73,24 +89,64 @@ export default function MobileHub() {
   );
 
   const renderMobileJourneys = () => (
-    <div className="flex-col gap-6 animate-fade-in">
-      {[
-        { name: 'Login Flow', steps: [{n:'App Open', v:100}, {n:'Input Creds', v:85}, {n:'MFA', v:78}, {n:'Success', v:75}], color: 'var(--accent-primary)' },
-        { name: 'Payment Flow', steps: [{n:'Cart', v:100}, {n:'Shipping', v:65}, {n:'Card Entry', v:45}, {n:'Success', v:40}], color: 'var(--accent-success)' },
-        { name: 'Search Flow', steps: [{n:'Home', v:100}, {n:'Search Tap', v:50}, {n:'Query Entered', v:45}, {n:'Result Click', v:30}], color: 'var(--accent-warning)' }
-      ].map((flow, i) => (
-        <div key={i} className="glass-panel" style={{ padding: '1.5rem' }}>
-          <div className="flex items-center justify-between" style={{ marginBottom: '1.5rem' }}>
-            <h3 style={{ margin: 0, fontSize: '1rem' }}>{flow.name}</h3>
-            <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Last 24 Hours</span>
+    <div className="flex-col gap-4 animate-fade-in">
+      {journeys.map((flow, i) => (
+        <div key={i} className="glass-panel" style={{ padding: 'var(--panel-padding)', position: 'relative', overflow: 'hidden' }}>
+          {/* Subtle background glow */}
+          <div style={{ position: 'absolute', top: 0, right: 0, width: '150px', height: '150px', background: flow.color, opacity: 0.05, filter: 'blur(40px)', borderRadius: '50%' }}></div>
+          
+          <div className="flex items-center justify-between" style={{ marginBottom: '2.5rem' }}>
+            <div className="flex-col gap-1">
+              <h3 style={{ margin: 0, fontWeight: '600' }}>{flow.name}</h3>
+              <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>Conversion Funnel • Last 24 Hours</span>
+            </div>
+            <div className="badge" style={{ background: 'var(--bg-base)', border: `1px solid ${flow.color}`, color: flow.color, padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}>
+              Overall Conversion: <strong>{flow.steps[flow.steps.length - 1].v}%</strong>
+            </div>
           </div>
-          <div className="flex gap-2" style={{ height: '120px', alignItems: 'flex-end' }}>
+          
+          <div className="flex items-start" style={{ width: '100%', position: 'relative' }}>
             {flow.steps.map((step, j) => (
-              <div key={j} className="flex-col items-center" style={{ flex: 1, gap: '0.5rem' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: '600' }}>{step.v}%</span>
-                <div style={{ width: '100%', height: `${step.v}%`, background: flow.color, opacity: 0.8, borderRadius: '4px 4px 0 0' }}></div>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{step.n}</span>
-              </div>
+              <React.Fragment key={j}>
+                <div className="flex-col items-center" style={{ flex: '0 0 auto', width: '120px', zIndex: 1 }}>
+                  <div className="flex items-center justify-center" style={{ 
+                    width: '74px', height: '74px', 
+                    borderRadius: '50%', 
+                    background: 'var(--bg-surface)', 
+                    border: `3px solid ${j === 0 ? 'var(--accent-success)' : flow.color}`,
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease'
+                  }}>
+                    <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)' }}>{step.v}%</span>
+                  </div>
+                  <span style={{ marginTop: '1rem', fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-primary)', textAlign: 'center' }}>{step.n}</span>
+                </div>
+
+                {j < flow.steps.length - 1 && (
+                  <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+                    {/* Base Line */}
+                    <div style={{ position: 'absolute', top: '35px', left: 0, width: '100%', height: '4px', background: 'var(--bg-base)', zIndex: 0 }}></div>
+                    {/* Filled Line */}
+                    <div style={{ position: 'absolute', top: '35px', left: 0, width: '100%', height: '4px', background: flow.color, opacity: (step.v + flow.steps[j+1].v) / 200, zIndex: 0, transition: 'all 0.5s ease' }}></div>
+                    
+                    {/* Drop-off Badge */}
+                    <div className="animate-fade-in" style={{ 
+                      marginTop: '70px', 
+                      padding: '0.35rem 0.75rem', 
+                      color: 'var(--accent-danger)', 
+                      borderRadius: '1rem',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      border: '1px solid rgba(239, 68, 68, 0.2)',
+                      whiteSpace: 'nowrap',
+                      zIndex: 2,
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                      -{step.v - flow.steps[j+1].v}% drop
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
             ))}
           </div>
         </div>
@@ -99,57 +155,54 @@ export default function MobileHub() {
   );
 
   const renderAnalytics = () => (
-    <div className="grid grid-cols-2 gap-6 animate-fade-in">
+    <div className="grid grid-cols-2 gap-4 animate-fade-in">
       {/* Device Performance Chart */}
-      <div className="glass-panel" style={{ padding: '1.5rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
+        <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Zap size={16} className="text-warning"/> UI Render Delay (ms)
         </h3>
         <div style={{ height: '200px', display: 'flex', alignItems: 'flex-end', gap: '4px', borderBottom: '1px solid var(--border-color)' }}>
-          {Array.from({ length: 24 }).map((_, i) => {
-            const val = 10 + Math.random() * 20 + (i === 12 ? 40 : 0);
-            return (
-              <div key={i} className="tooltip-container" data-tooltip={`${Math.floor(val)}ms`} style={{ flex: 1, height: `${val}%`, background: val > 40 ? 'var(--accent-warning)' : 'var(--accent-primary)', borderRadius: '2px 2px 0 0', opacity: 0.8 }}></div>
-            );
-          })}
+          {analytics.uiDelays.map((val, i) => (
+            <div key={i} className="tooltip-container" data-tooltip={`${Math.floor(val)}ms`} style={{ flex: 1, height: `${Math.min(val, 100)}%`, background: val > 40 ? 'var(--accent-warning)' : 'var(--accent-primary)', borderRadius: '2px 2px 0 0', opacity: 0.8, transition: 'all 0.5s ease' }}></div>
+          ))}
         </div>
       </div>
 
       {/* Network Performance Chart */}
-      <div className="glass-panel" style={{ padding: '1.5rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="glass-panel" style={{ padding: 'var(--panel-padding)' }}>
+        <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Wifi size={16} className="text-secondary"/> Network Latency (5G vs WiFi)
         </h3>
         <div style={{ height: '200px', position: 'relative', borderBottom: '1px solid var(--border-color)' }}>
           {/* Mock line chart using SVG */}
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
             {/* 5G line */}
-            <polyline points="0,60 20,55 40,65 60,40 80,50 100,45" fill="none" stroke="var(--accent-primary)" strokeWidth="2" />
+            <polyline points={`0,${isSpiking ? 80 : 60} 20,${isSpiking ? 75 : 55} 40,${isSpiking ? 85 : 65} 60,${isSpiking ? 60 : 40} 80,${isSpiking ? 70 : 50} 100,${isSpiking ? 65 : 45}`} fill="none" stroke="var(--accent-primary)" strokeWidth="2" style={{ transition: 'all 0.5s ease' }} />
             {/* WiFi line */}
-            <polyline points="0,80 20,78 40,82 60,75 80,79 100,81" fill="none" stroke="var(--accent-success)" strokeWidth="2" strokeDasharray="4" />
+            <polyline points={`0,${isSpiking ? 95 : 80} 20,${isSpiking ? 90 : 78} 40,${isSpiking ? 92 : 82} 60,${isSpiking ? 85 : 75} 80,${isSpiking ? 89 : 79} 100,${isSpiking ? 91 : 81}`} fill="none" stroke="var(--accent-success)" strokeWidth="2" strokeDasharray="4" style={{ transition: 'all 0.5s ease' }} />
           </svg>
           <div style={{ position: 'absolute', top: '10px', right: '10px', display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.7rem' }}>
-            <div className="flex items-center gap-2"><div style={{ width: '10px', height: '2px', background: 'var(--accent-primary)' }}></div> 5G/LTE (~85ms)</div>
-            <div className="flex items-center gap-2"><div style={{ width: '10px', height: '2px', background: 'var(--accent-success)' }}></div> WiFi (~25ms)</div>
+            <div className="flex items-center gap-2"><div style={{ width: '10px', height: '2px', background: 'var(--accent-primary)' }}></div> 5G/LTE {isSpiking ? '(~200ms)' : '(~85ms)'}</div>
+            <div className="flex items-center gap-2"><div style={{ width: '10px', height: '2px', background: 'var(--accent-success)' }}></div> WiFi {isSpiking ? '(~120ms)' : '(~25ms)'}</div>
           </div>
         </div>
       </div>
       
-      <div className="col-span-2 glass-panel" style={{ padding: '1.5rem' }}>
-         <h3 style={{ margin: '0 0 1rem 0', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="col-span-2 glass-panel" style={{ padding: 'var(--panel-padding)' }}>
+         <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <BatteryCharging size={16} className="text-success"/> Battery Impact
         </h3>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
           <div className="flex-col gap-1" style={{ flex: 1 }}>
             <div className="flex justify-between" style={{ fontSize: '0.8125rem' }}><span>Video Playback</span> <span style={{ color: 'var(--accent-warning)' }}>High Impact</span></div>
             <div style={{ width: '100%', height: '8px', background: 'var(--bg-base)', borderRadius: '4px' }}>
-              <div style={{ width: '85%', height: '100%', background: 'var(--accent-warning)', borderRadius: '4px' }}></div>
+              <div style={{ width: `${analytics.battery.video}%`, height: '100%', background: 'var(--accent-warning)', borderRadius: '4px', transition: 'width 0.5s ease' }}></div>
             </div>
           </div>
           <div className="flex-col gap-1" style={{ flex: 1 }}>
             <div className="flex justify-between" style={{ fontSize: '0.8125rem' }}><span>Background Sync</span> <span style={{ color: 'var(--accent-success)' }}>Low Impact</span></div>
             <div style={{ width: '100%', height: '8px', background: 'var(--bg-base)', borderRadius: '4px' }}>
-              <div style={{ width: '15%', height: '100%', background: 'var(--accent-success)', borderRadius: '4px' }}></div>
+              <div style={{ width: `${analytics.battery.sync}%`, height: '100%', background: 'var(--accent-success)', borderRadius: '4px', transition: 'width 0.5s ease' }}></div>
             </div>
           </div>
         </div>
@@ -159,40 +212,45 @@ export default function MobileHub() {
   );
 
   return (
-    <div className="flex-col gap-6 animate-fade-in" style={{ paddingBottom: '2rem' }}>
+    <div className="flex-col gap-4 animate-fade-in" style={{ paddingBottom: '2rem' }}>
       <div className="flex justify-between items-center" style={{ marginBottom: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Mobile Experience</h1>
+          <h1 style={{ marginBottom: '0.25rem', letterSpacing: '-0.02em' }}>Mobile Experience</h1>
           <p className="text-secondary" style={{ fontSize: '0.875rem' }}>Track native app performance, user journeys, and crash analytics across Android and iOS.</p>
         </div>
         <div className="flex gap-3">
+          <button className="btn btn-ghost tooltip-container" onClick={simulateTrafficSpike} disabled={isSpiking} data-tooltip="Simulate Traffic Spike">
+            <Play size={14} className={isSpiking ? "text-danger" : ""} /> {isSpiking ? "Spike Active" : "Simulate Spike"}
+          </button>
+          <button className="btn btn-ghost tooltip-container" onClick={resetMetrics} disabled={!isSpiking} data-tooltip="Reset to Baseline">
+            <RotateCcw size={14} /> Reset
+          </button>
           <button className="btn btn-ghost"><Filter size={14} /> Filter</button>
         </div>
       </div>
 
-      {/* 8.1 KPI Header */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Smartphone size={24} />
           </div>
           <div className="flex-col gap-1">
-            <span style={{ fontSize: '2rem', fontWeight: '700', lineHeight: 1 }}>9.4/10</span>
+            <span style={{ fontSize: '2rem', fontWeight: '700', lineHeight: 1, color: isSpiking ? 'var(--accent-warning)' : 'var(--text-primary)' }}>{isSpiking ? '6.8/10' : '9.4/10'}</span>
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Mobile Experience Score (Apdex)</span>
           </div>
         </div>
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ padding: 'var(--panel-padding)', display: 'flex', alignItems: 'center', gap: 'var(--panel-gap)' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '50%', color: 'var(--accent-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CheckCircle size={24} />
           </div>
           <div className="flex-col gap-1">
-            <span style={{ fontSize: '2rem', fontWeight: '700', lineHeight: 1 }}>98.2%</span>
+            <span style={{ fontSize: '2rem', fontWeight: '700', lineHeight: 1, color: isSpiking ? 'var(--accent-warning)' : 'var(--text-primary)' }}>{isSpiking ? '93.7%' : '98.2%'}</span>
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Global Mobile Success Rate</span>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-6" style={{ borderBottom: '1px solid var(--border-color)' }}>
+      <div className="flex gap-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
         {['Device Monitoring', 'Mobile Journeys', 'Analytics'].map(tab => (
           <button 
             key={tab}
