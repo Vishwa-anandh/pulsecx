@@ -1,0 +1,70 @@
+{
+  "executive": {
+    "kpis": {
+      "customerExperienceScore": { "value": "89.2", "change": "+2.4%", "isPositive": true },
+      "activeIncidents": { "value": "3", "change": "-1", "isPositive": true },
+      "journeySuccessRate": { "value": "94.8%", "change": "-0.5%", "isPositive": false },
+      "slaCompliance": { "value": "99.8%", "change": "0.0%", "isPositive": true }
+    },
+    "experienceData": [
+      { "time": "00:00", "score": 85 },
+      { "time": "04:00", "score": 88 },
+      { "time": "08:00", "score": 92 },
+      { "time": "12:00", "score": 81 },
+      { "time": "16:00", "score": 86 },
+      { "time": "20:00", "score": 90 },
+      { "time": "24:00", "score": 94 }
+    ],
+    "availabilityData": [
+      { "name": "Payment API", "uptime": 99.9, "downtime": 0.1 },
+      { "name": "Auth Service", "uptime": 99.5, "downtime": 0.5 },
+      { "name": "Search Engine", "uptime": 98.2, "downtime": 1.8 },
+      { "name": "Checkout DB", "uptime": 99.9, "downtime": 0.1 }
+    ],
+    "impactData": [
+      { "time": "0", "value": 30000 },
+      { "time": "1", "value": 32000 },
+      { "time": "2", "value": 35000 },
+      { "time": "3", "value": 34000 },
+      { "time": "4", "value": 38000 },
+      { "time": "5", "value": 42500 }
+    ],
+    "failingJourneys": [
+      { "id": "J-104", "name": "User Registration", "failureRate": "12.4%", "trend": "up" },
+      { "id": "J-209", "name": "Checkout Payment", "failureRate": "8.1%", "trend": "up" },
+      { "id": "J-401", "name": "Password Reset", "failureRate": "5.2%", "trend": "down" }
+    ]
+  },
+  "monitoring": {
+    "syntheticMonitors": [
+      { "id": "MON-1", "name": "Checkout Flow", "frequency": "5 min", "status": "Running" },
+      { "id": "MON-2", "name": "User Login API", "frequency": "1 min", "status": "Failed" },
+      { "id": "MON-3", "name": "Search Engine", "frequency": "10 min", "status": "Running" },
+      { "id": "MON-4", "name": "Payment Gateway", "frequency": "5 min", "status": "Paused" }
+    ],
+    "browserMetrics": [
+      { "name": "Load Time", "value": "1.2s", "trend": "-0.1s", "status": "success" },
+      { "name": "TTFB", "value": "180ms", "trend": "+12ms", "status": "success" },
+      { "name": "DOM Ready", "value": "0.8s", "trend": "-0.05s", "status": "success" },
+      { "name": "Render Time", "value": "1.4s", "trend": "+0.5s", "status": "warning" }
+    ],
+    "mobileData": [
+      { "subject": "Network", "Android": 85, "iOS": 90 },
+      { "subject": "Device", "Android": 92, "iOS": 88 },
+      { "subject": "Browser", "Android": 78, "iOS": 85 }
+    ],
+    "locationsData": [
+      { "region": "US East", "latency": "45ms", "val": 45, "status": "Healthy" },
+      { "region": "US West", "latency": "65ms", "val": 65, "status": "Healthy" },
+      { "region": "Europe (Frankfurt)", "latency": "120ms", "val": 120, "status": "Degraded" },
+      { "region": "Asia (Tokyo)", "latency": "210ms", "val": 210, "status": "Healthy" }
+    ],
+    "initialLogs": [
+      { "id": "L-101", "time": "10:45:02 AM", "duration": "1.2s", "result": "Success" },
+      { "id": "L-102", "time": "10:40:05 AM", "duration": "4.5s", "result": "Failed" },
+      { "id": "L-103", "time": "10:35:01 AM", "duration": "1.1s", "result": "Success" },
+      { "id": "L-104", "time": "10:30:03 AM", "duration": "1.3s", "result": "Success" },
+      { "id": "L-105", "time": "10:25:01 AM", "duration": "1.2s", "result": "Success" }
+    ]
+  }
+}
