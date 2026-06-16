@@ -218,11 +218,7 @@ export default function Sidebar({ setIsSearchOpen }) {
           )}
         </div>
 
-        {!isCollapsed && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', fontSize: '0.65rem', fontWeight: '700', color: 'var(--accent-danger)', opacity: 0.8 }}>
-            Powered by <img src="/maitsys-logo.png" alt="maitsys" style={{ height: '12px', objectFit: 'contain' }} />
-          </div>
-        )}
+
       </div>
     </aside>
   );

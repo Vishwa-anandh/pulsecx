@@ -99,11 +99,11 @@ export default function LoginPage() {
         {/* Bottom Text */}
         <div style={{ zIndex: 2 }}>
           <h1 style={{ 
-            fontSize: '4rem', 
+            fontSize: '5.5rem', 
             lineHeight: '1.1', 
             fontWeight: '600', 
             marginBottom: '1rem',
-            maxWidth: '500px',
+            maxWidth: '600px',
             background: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
