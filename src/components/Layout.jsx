@@ -11,6 +11,8 @@ export default function Layout() {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const [isChatOpen, setIsChatOpen] = React.useState(false);
 
+  window.setIsChatOpenGlobal = setIsChatOpen;
+
   const handleKeyDown = (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();

@@ -10,14 +10,7 @@ export default function AdministrationHub() {
   const { currentUser, users, addUser, updateUser, deleteUser, roles, updateRolePrivilege, teams, addTeam, updateTeam, deleteTeam } = useUsers();
   const { addToast } = useToast();
 
-  if (!currentUser?.isDemo) {
-    return (
-      <EmptyState 
-        title="Workspace Administration" 
-        description="Configure your workspace, invite team members, and manage billing." 
-      />
-    );
-  }
+
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -137,6 +130,15 @@ export default function AdministrationHub() {
     privilege: 'Read, Write, Execute',
     status: 'Active'
   });
+
+  if (!currentUser?.isDemo) {
+    return (
+      <EmptyState 
+        title="Workspace Administration" 
+        description="Configure your workspace, invite team members, and manage billing." 
+      />
+    );
+  }
 
   if (!tab) {
     return <Navigate to="/administration/users" replace />;

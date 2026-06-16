@@ -33,7 +33,10 @@ const steps = [
 
 export function AppSetupWizard() {
   const { currentUser, setCurrentUser } = useUsers();
-  const { currentStep, setCurrentStep } = useSetup();
+  const { currentStep, setCurrentStep, nextStep } = useSetup();
+  
+  window.setCurrentStepGlobal = setCurrentStep;
+  window.nextStepGlobal = nextStep;
 
   if (!currentUser?.isNewUser) return null;
 

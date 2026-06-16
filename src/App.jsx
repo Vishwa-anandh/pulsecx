@@ -42,6 +42,16 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+import { useNavigate } from 'react-router-dom';
+
+function GlobalNavigator() {
+  const navigate = useNavigate();
+  const { setCurrentUser } = useUsers();
+  window.navigateRoute = navigate;
+  window.setCurrentUserGlobal = setCurrentUser;
+  return null;
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -55,6 +65,7 @@ function App() {
               <MobileProvider>
                 <ToastProvider>
                   <BrowserRouter>
+                    <GlobalNavigator />
                     <Routes>
                       <Route path="/login" element={<LoginPage />} />
                       <Route path="/setup" element={<OnboardingWizard />} />
